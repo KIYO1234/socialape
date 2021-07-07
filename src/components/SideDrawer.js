@@ -8,6 +8,7 @@ import { useHistory } from 'react-router';
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import AddIcon from '@material-ui/icons/Add';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { AddScream } from './index';
 
 const useStyles = makeStyles((theme) => ({
     list: {
@@ -23,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
     },
     drawer: {
         width: 200,
+    },
+    addIconContainer: {
+        position: 'fixed',
+        top: 3,
+        right: 20,
     },
 }));
 
@@ -51,6 +57,9 @@ const SideDrawer = () => {
                         style={{ color: 'white' }}
                     />
                 </IconButton>
+                <div className={classes.addIconContainer}>
+                    <AddScream />
+                </div>
                 <Drawer
                     open={open}
                     anchor='left'
@@ -92,7 +101,7 @@ const SideDrawer = () => {
                                 button
                                 onClick={() => link('/')}
                             >
-                                <ListItemText>SCREAM</ListItemText>
+                                <ListItemText>ADD SCREAM</ListItemText>
                             </ListItem>
                             <ListItem
                                 button

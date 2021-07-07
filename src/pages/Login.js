@@ -12,7 +12,8 @@ import { CircularProgress } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { fetchLoginUserAsync, login } from '../features/users/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Loading } from '../components';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -61,6 +62,9 @@ const Login = () => {
         watch,
         formState: { errors },
     } = useForm();
+    const isLoading = useSelector(state => state.users.isLoading);
+    console.log(isLoading);
+    
 
     // useState
     const [loading, setLoading] = useState(false);
@@ -77,87 +81,92 @@ const Login = () => {
         history.push('/');
     }
 
-    return (
-        <div>
-            <Grid container className={classes.form}>
-                <Grid item sm />
-                <Grid item sm>
-                    <img className={classes.image} src={AppIcon} alt="monkey" />
-                    <Typography
-                        variant="h5"
-                        className={classes.pageTitle}
-                    >Login
-                    </Typography>
-
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <TextField
-                            label="Email"
-                            {...register('email', {
-                                required: 'Email must not empty',
-                                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                            })}
-                        ></TextField>
-                        {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
-                        <p className={classes.errMessage}>
-                            {errors.email?.type === "pattern" && "Your Email address is invalid type"}
-                        </p>
-
-                        {/* password */}
-                        <div className={classes.passwordArea}>
+    if (!isLoading) {
+        
+        return (
+            <div>
+                <Grid container className={classes.form}>
+                    <Grid item sm />
+                    <Grid item sm>
+                        <img className={classes.image} src={AppIcon} alt="monkey" />
+                        <Typography
+                            variant="h5"
+                            className={classes.pageTitle}
+                        >Login
+                        </Typography>
+    
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <TextField
-                                label="Password"
-                                {...register("password", {
-                                    required: "Password must not be empty",
+                                label="Email"
+                                {...register('email', {
+                                    required: 'Email must not empty',
+                                    pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
                                 })}
-                                type={visible ? 'text' : 'password'}
                             ></TextField>
-                            <span
-                                className={classes.visibilityIcon}
-                                onClick={handleType}
-                            >
-                                {visible ?
-                                    <VisibilityOffIcon /> :
-                                    <VisibilityIcon />
-                                }
-                            </span>
+                            {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
                             <p className={classes.errMessage}>
-                                {errors.password && errors.password.message}
+                                {errors.email?.type === "pattern" && "Your Email address is invalid type"}
                             </p>
-                        </div>
-
-                        {/* loginButton */}
-                        <div>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                className={classes.loginBtn}
-                                disabled={loading}
-                            >
-                                Login
-                                {loading &&
-                                    <CircularProgress className={classes.progress} />
-                                }
-                            </Button>
-                        </div>
-
-                        {/* message */}
-                        <div className={classes.toSignupMsg}>
-                            <small>
-                                <div>Don't have an account?</div>
-                                <div>signup
-                                    <Link to='/signup'> here</Link>
-                                </div>
-                            </small>
-                        </div>
-
-                    </form>
-
+    
+                            {/* password */}
+                            <div className={classes.passwordArea}>
+                                <TextField
+                                    label="Password"
+                                    {...register("password", {
+                                        required: "Password must not be empty",
+                                    })}
+                                    type={visible ? 'text' : 'password'}
+                                ></TextField>
+                                <span
+                                    className={classes.visibilityIcon}
+                                    onClick={handleType}
+                                >
+                                    {visible ?
+                                        <VisibilityOffIcon /> :
+                                        <VisibilityIcon />
+                                    }
+                                </span>
+                                <p className={classes.errMessage}>
+                                    {errors.password && errors.password.message}
+                                </p>
+                            </div>
+    
+                            {/* loginButton */}
+                            <div>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.loginBtn}
+                                    disabled={loading}
+                                >
+                                    Login
+                                    {loading &&
+                                        <CircularProgress className={classes.progress} />
+                                    }
+                                </Button>
+                            </div>
+    
+                            {/* message */}
+                            <div className={classes.toSignupMsg}>
+                                <small>
+                                    <div>Don't have an account?</div>
+                                    <div>signup
+                                        <Link to='/signup'> here</Link>
+                                    </div>
+                                </small>
+                            </div>
+    
+                        </form>
+    
+                    </Grid>
+                    <Grid item sm />
                 </Grid>
-                <Grid item sm />
-            </Grid>
-        </div>
-    );
+            </div>
+        ); 
+    } else {
+        return <Loading text='Logging in...' />
+    }
 }
 
 

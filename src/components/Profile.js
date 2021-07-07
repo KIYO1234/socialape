@@ -156,10 +156,7 @@ const Profile = () => {
     } else {
         return (
             <>
-                <Paper>
-                    <div>You are not logged in</div>
-                    <div>Please login</div>
-                </Paper>
+                <div>You are not logged in</div>
             </>
         )
     }

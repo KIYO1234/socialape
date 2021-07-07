@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import firebase from 'firebase';
 
 const initialState = {
     loginUser: {
@@ -15,7 +16,8 @@ const initialState = {
         likes: [],
         notifications: [],
     },
-    isLoggedIn: false
+    isLoggedIn: false,
+    isLoading: false,
 }
 
 // header
@@ -92,8 +94,35 @@ export const changeUserDetailsAsync = createAsyncThunk(
     }
 )
 
+// updateImage
+export const updateImageAsync = createAsyncThunk(
+    'users/updateImageAsync',
+    async (data) => {
+        console.log('file', data.file);
+        console.log('file name', data.file.name);
+        console.log('handle', data.handle);
+        const storageRef = firebase.storage().ref(data.file.name);
+        console.log(storageRef);
 
+        // firebase.storage().ref(file.name).put(file)
+        await storageRef.put(data.file)
+            .then(res => {
+                console.log('upload image successfully', res);
+                
+            });
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/socialape-73b9a.appspot.com/o/${data.file.name}?alt=media`;
+        
+        firebase.firestore()
+        .doc(`users/${data.handle}`)
+        .update({ imageUrl: imageUrl })
+        .catch(err => {
+            console.log(err);
+        });
+        return imageUrl
+    }
+)
 
+// userSlice
 export const userSlice = createSlice({
     name: 'users',
     initialState,
@@ -121,17 +150,19 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchLoginUserAsync.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(fetchLoginUserAsync.fulfilled, (state, action) => {
                 alert('Welcome !')
                 state.loginUser.isLoggedIn = true;
                 state.loginUser = action.payload;
-            })
-            .addCase(fetchLoginUserAsync.pending, () => {
-                console.log('fetchLoginUserAsync is pending...')
+                state.isLoading = false;
             })
             .addCase(setUserAsync.fulfilled, (state, action) => {
                 state.isLoggedIn = true;
                 state.loginUser = action.payload;
+                state.isLoading = false;
             })
             .addCase(logoutAsync.fulfilled, (state) => {
                 console.log('logoutAsync is fulfilled!');
@@ -148,10 +179,21 @@ export const userSlice = createSlice({
                 };
                 state.isLoggedIn = false;
             })
+            .addCase(changeUserDetailsAsync.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(changeUserDetailsAsync.fulfilled, (state, action) => {
                 console.log('changeUserDetailsAsync.fulfilled', action.payload);
                 state.loginUser.credentials.bio = action.payload.bio;
                 state.loginUser.credentials.location = action.payload.location;
+                state.isLoading = false;
+            })
+            .addCase(updateImageAsync.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateImageAsync.fulfilled, (state, action) => {
+                state.loginUser.credentials.imageUrl = action.payload;
+                state.isLoading = false;
             })
     }
 });

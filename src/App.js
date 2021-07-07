@@ -4,11 +4,11 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'; im
 import jwtDecode from 'jwt-decode';
 import AuthRoute from './util/AuthRoute';
 // Pages
-import { Home, Login, Signup } from './pages/index';
+import { CommentDetails, Home, Login, Signup } from './pages/index';
 // Components
 import { Navbar, ProfileSingle } from './components/index';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchScreamsAsync } from './features/screams/screamSlice';
+import { fetchAllCommentsAsync, fetchScreamsAsync } from './features/screams/screamSlice';
 import { useEffect } from 'react';
 import { setUserAsync, logoutAsync } from './features/users/userSlice';
 
@@ -68,6 +68,7 @@ function App() {
   useEffect(() => {
     console.log('App.js rendered');
     dispatch(fetchScreamsAsync());
+    dispatch(fetchAllCommentsAsync());
     // axios.get('/screams')
   }, [dispatch]);
   useEffect(() => {
@@ -98,6 +99,7 @@ function App() {
                 authenticated={authenticated}
               />
               <Route exact path='/profile' component={ProfileSingle} />
+              <Route exact path='/comment/details/:screamId' component={CommentDetails} />
               <Route exact path='/' component={Home} />
             </Switch>
           </div>

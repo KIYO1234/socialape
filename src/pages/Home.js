@@ -10,7 +10,7 @@ import { Loading, Profile } from '../components/index';
 
 const useStyles = makeStyles((theme) => ({
     screamsContainer: {
-        padding: 40,
+        padding: '5%',
         paddingRight: 0,
     },
 }));
@@ -54,7 +54,7 @@ const Home = () => {
             </div>
         )
     } else {
-        return <Loading />
+        return <Loading text='Loading...' />
     }
 }
 

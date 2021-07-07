@@ -9,6 +9,10 @@ const useStyles = makeStyles((theme) => ({
     createIcon: {
         color: '#33c9dc',
     },
+    // editDetailContainer: {
+    //     position: 'relative',
+    //     left: 200,
+    // }
 }));
 
 const EditDetails = () => {
@@ -55,7 +59,10 @@ const EditDetails = () => {
     if (credentials) {
         return (
             <>
-                <IconButton onClick={handleClickOpen}>
+                <IconButton
+                    onClick={handleClickOpen}
+                    // className={classes.editDetailContainer}
+                >
                     <CreateIcon className={classes.createIcon} />
                 </IconButton>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
