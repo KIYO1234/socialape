@@ -76,6 +76,11 @@ const useStyles = makeStyles((theme) => ({
     iconsContainer: {
         textAlign: 'right',
     },
+    notLoggedIn: {
+        textAlign: 'center',
+        marginTop: '40%',
+        fontSize: 40,
+    },
 }));
 
 const ProfileSingle = () => {
@@ -199,7 +204,9 @@ const ProfileSingle = () => {
         } else {
             return (
                 <> 
-                    <div>You are not logged in</div>
+                    <div className={classes.notLoggedIn}>
+                        You are not logged in
+                    </div>
                 </>
             )
         }

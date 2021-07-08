@@ -35,22 +35,40 @@ const Home = () => {
     if (screams.length > 0) {
         return (
             <div>
-                <Grid
-                    container
-                    // spacing={10}
-                    className={classes.screamsContainer}
-                >
-                    <Grid item sm={8} xs={12}>
-                        {screams.map((scream, index) =>
-                            <Scream key={index} scream={scream} />)
-                        }
-                    </Grid>
-                    <Hidden only={['xs', 'sm']}>
-                        <Grid item sm={4} xs={12}>
-                            <Profile />
+                <Hidden smDown>
+                    <Grid
+                        container
+                        className={classes.screamsContainer}
+                    >
+                        <Grid item sm={8} xs={12}>
+                            {screams.map((scream, index) =>
+                                <Scream key={index} scream={scream} />)
+                            }
                         </Grid>
-                    </Hidden>
-                </Grid>
+                        <Hidden only={['xs', 'sm']}>
+                            <Grid item sm={4} xs={12}>
+                                <Profile />
+                            </Grid>
+                        </Hidden>
+                    </Grid>
+                </Hidden>
+                <Hidden mdUp>
+                    <Grid
+                        container
+                        className={classes.screamsContainer}
+                    >
+                        <Grid item sm={12}>
+                            {screams.map((scream, index) =>
+                                <Scream key={index} scream={scream} />)
+                            }
+                        </Grid>
+                        <Hidden only={['xs', 'sm']}>
+                            <Grid item sm={4} xs={12}>
+                                <Profile />
+                            </Grid>
+                        </Hidden>
+                    </Grid>
+                </Hidden>
             </div>
         )
     } else {

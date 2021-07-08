@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Button, Paper, CardMedia, IconButton } from '@material-ui/core';
+import { makeStyles, Button, Paper, CardMedia, IconButton, Card } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import RoomIcon from '@material-ui/icons/Room';
@@ -64,6 +64,17 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         position: 'relative',
+    },
+    notLoggedInCard: {
+        padding: 30,
+    },
+    buttonsContainer: {
+        marginTop: 20,
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    signupBtn: {
+        marginLeft: 30,
     }
 }));
 
@@ -76,8 +87,6 @@ const Profile = () => {
     const dispatch = useDispatch();
     const handleImageChange = (event) => {
         const image = event.target.files[0];
-        console.log(image);
-        console.log(image.name);
         // send to server
         const formData = new FormData();
         formData.append('image', image, image.name)
@@ -87,11 +96,11 @@ const Profile = () => {
             .then(res => console.log(res))
             .catch(err => console.log(err));
     };
-    const getUserData = () => {
-        const FBIdToken = localStorage.FBIdToken;
-        axios.defaults.headers.common['Authorization'] = FBIdToken;
-        dispatch(editUserDetails(credentials));
-    };
+    // const getUserData = () => {
+    //     const FBIdToken = localStorage.FBIdToken;
+    //     axios.defaults.headers.common['Authorization'] = FBIdToken;
+    //     dispatch(editUserDetails(credentials));
+    // };
     const logout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
             await dispatch(logoutAsync());
@@ -102,7 +111,9 @@ const Profile = () => {
             return false;
         };
     };
-
+    const link = (path) => {
+        history.push(path);
+    };
 
     if (isLoggedIn) {
         return (
@@ -156,7 +167,32 @@ const Profile = () => {
     } else {
         return (
             <>
-                <div>You are not logged in</div>
+                <Card className={classes.notLoggedInCard}>
+                    <div>You are not logged in</div>
+                    <div>Please login</div>
+                    <br/>
+                    <div>If you don't have your account, please signup</div>
+                    <div className={classes.buttonsContainer}>
+                        <div>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={() => link('/login')}
+                            >
+                                login
+                            </Button>
+                        </div>
+                        <div className={classes.signupBtn}>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={() => link('/signup')}
+                            >
+                                signup
+                            </Button>
+                        </div>
+                    </div>
+                </Card>
             </>
         )
     }

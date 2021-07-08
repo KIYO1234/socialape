@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import { makeStyles, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@material-ui/core';
-import CommentIcon from '@material-ui/icons/Comment';
-import { useForm, Controller } from "react-hook-form";
+import { makeStyles, IconButton, TextField, Dialog, DialogActions, DialogContent, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { addScream, commentAsync } from '../features/screams/screamSlice';
-import AddCommentIcon from '@material-ui/icons/AddComment';
+import { addScream } from '../features/screams/screamSlice';
 import AddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const useStyles = makeStyles({
@@ -30,14 +26,17 @@ const useStyles = makeStyles({
         position: 'absolute',
         right: 10,
         bottom: 5,
+    },
+    maximumLength: {
+        color: 'red',
+        fontSize: 18,
+        marginLeft: 20,
     }
 });
 
 const AddScream = (props) => {
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);
-    const screams = useSelector(state => state.screams.screams);
     const dispatch = useDispatch();
-    const { register, handleSubmit, formState: { errors }, control } = useForm()
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
@@ -46,25 +45,27 @@ const AddScream = (props) => {
     const handleClose = () => {
         setOpen(false);
     };
-
     const [newScream, setNewScream] = useState('');
     const handleScream = (event) => {
         setNewScream(event.target.value);
-    }
-
+    };
     const submitScream = () => {
         if (isLoggedIn) {
-            dispatch(addScream({body: newScream}));
+            dispatch(addScream({ body: newScream }));
             setNewScream('');
             handleClose();
         } else {
             alert('You are not logged in.\nPlease login.');
             handleClose();
-        }
-    }
+        };
+    };
+    const cancel = () => {
+        handleClose();
+        setNewScream('');
+    };
     const clear = () => {
         setNewScream('');
-    }
+    };
 
     return (
         <>
@@ -76,7 +77,7 @@ const AddScream = (props) => {
                 onClose={handleClose} aria-labelledby="form-dialog-title"
                 className={classes.dialog}
                 fullWidth
-            >   
+            >
                 <DialogContent className={classes.textFieldContainer}>
                     <TextField
                         autoFocus
@@ -89,23 +90,37 @@ const AddScream = (props) => {
                         onChange={handleScream}
                         value={newScream}
                     />
-                    {errors.scream && <p className={classes.errMessage}>{errors.scream.message}</p>}
                     <IconButton className={classes.clearIcon}>
                         <HighlightOffIcon onClick={clear} />
                     </IconButton>
                 </DialogContent>
+                {newScream.length > 140 &&
+                    <div className={classes.maximumLength}>Maximum length is 140</div>
+                }
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={cancel} color="primary">
                         Cancel
                     </Button>
 
-                    <Button
-                        onClick={submitScream}
-                        color="primary"
-                        disabled={false}
-                    >
-                        scream
-                    </Button>
+                    {newScream && newScream.length <= 140 ?
+                        <Button
+                            onClick={submitScream}
+                            color="primary"
+                            type='submit'
+                            disabled={false}
+                        >
+                            scream
+                        </Button>
+                        :
+                        <Button
+                            onClick={submitScream}
+                            color="primary"
+                            type='submit'
+                            disabled={true}
+                        >
+                            scream
+                        </Button>
+                    }
 
                 </DialogActions>
             </Dialog>

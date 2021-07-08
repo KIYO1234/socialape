@@ -34,12 +34,24 @@ const useStyles = makeStyles((theme) => ({
     accountIcon: {
         color: 'white',
     },
+    userImage: {
+        maxWidth: 50,
+        height: 50,
+        borderRadius: '50%',
+        display: 'block',
+        position: 'fixed',
+        left: '5%',
+        cursor: 'pointer',
+    }
 }));
 
 const Navbar = () => {
     const classes = useStyles();
     const history = useHistory();
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);
+    const imageUrl = useSelector(state => state.users.loginUser.credentials.imageUrl);
+    console.log(imageUrl);
+    
     const dispatch = useDispatch();
     const logout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
@@ -63,11 +75,16 @@ const Navbar = () => {
                     <Hidden only='xs'>
                         {isLoggedIn ?
                             <>
-                                <IconButton className={classes.accountIcon}>
+                                <img
+                                    src={imageUrl} alt='userImage'
+                                    className={classes.userImage}
+                                    onClick={() => link('/profile')}
+                                />
+                                {/* <IconButton className={classes.accountIcon}>
                                     <AccountCircleIcon
                                         onClick={() => link('/profile')}
                                     />
-                                </IconButton>
+                                </IconButton> */}
                                 <IconButton>
                                     <AddIcon className={classes.addIcon} />
                                 </IconButton>
@@ -83,6 +100,12 @@ const Navbar = () => {
                             </>
                             :
                             <>
+                                <img
+                                    src='https://firebasestorage.googleapis.com/v0/b/socialape-73b9a.appspot.com/o/person.jpg?alt=media&token=d747a225-5ee1-4528-b5d6-d6180bb21b86'
+                                    alt='not logged in'
+                                    className={classes.userImage}
+                                    onClick={() => link('/profile')}
+                                />
                                 <Button color="inherit" component={Link} to='/login'>Login</Button>
                                 <Button color="inherit" component={Link} to='/'>Home</Button>
                                 <Button color="inherit" component={Link} to='/signup'>Signup</Button>

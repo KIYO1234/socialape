@@ -80,6 +80,7 @@ const EditDetails = () => {
                             fullWidth
                             defaultValue={credentials.bio}
                             onChange={handleBio}
+                            multiline
                         />
                         <TextField
                             autoFocus
@@ -96,9 +97,21 @@ const EditDetails = () => {
                         <Button onClick={handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={change} color="primary">
-                            Change
-                        </Button>
+                        {bio && bio.length <= 140 ?
+                            <Button
+                                onClick={change} color="primary"
+                                disabled={false}
+                            >
+                                Change
+                            </Button>
+                            :
+                            <Button
+                                onClick={change} color="primary"
+                                disabled={true}
+                            >
+                                Change
+                            </Button>
+                        }
                     </DialogActions>
                 </Dialog>
             </>

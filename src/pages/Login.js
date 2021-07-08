@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     visibilityIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
 }));
@@ -59,30 +59,82 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
+        reset,
     } = useForm();
     const isLoading = useSelector(state => state.users.isLoading);
-    console.log(isLoading);
-    
-
+    const isLoggedIn = useSelector(state => state.users.isLoggedIn)
+    const error = useSelector(state => state.users.error);
+    const [localError, setLocalError] = useState('');
     // useState
-    const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleEmail = useCallback((event) => {
+        setEmail(event.target.value);
+    }, [setEmail]);
+    const handlePassword = useCallback((event) => {
+        setPassword(event.target.value);
+    }, [setPassword]);
+
+    const errorsObj = {
+        emailError: '',
+        passwordError: ''
+    };
+    
 
     // handlers
     const handleType = () => {
         setVisible(!visible)
-    }
+    };
 
     // functions
-    const onSubmit = async (data) => {
-        dispatch(fetchLoginUserAsync(data));
-        history.push('/');
+    const onSubmit = async () => {
+        // let error = ''
+        // await dispatch(fetchLoginUserAsync(data))
+        //     .then(res => console.log('login res: ', res))
+        //     .catch(err => {
+        //         console.log('login err: ', err);
+        //         error = err;
+        //         console.log('error', error);
+        //         if (error) {
+        //             alert('error occurred')
+        //         } else {
+        //             history.push('/');
+        //         }
+        //     });
+
+        // ---------------------------------
+        // try catch
+        // try {
+        //     await dispatch(fetchLoginUserAsync(data))
+        //         .then(res => console.log('login res: ', res))
+        //     // history.push('/');
+        // } catch (err) {
+        //     let error;
+        //     console.log('login err: ', err);
+        //     error = err;
+        //     console.log('error', error);
+        //     return
+        //     // if (error) {
+        //     //     alert('error occurred')
+        //     // } else {
+        //     //     history.push('/');
+        //     // }
+        //     // };
+        // }
+        // --------------------------------
+    
+        dispatch(fetchLoginUserAsync({ email: email, password: password })).then(res => {
+            console.log(res)
+        })
     }
 
+    if (!error && isLoggedIn) {
+        history.push('/')
+    }
+    
     if (!isLoading) {
-        
         return (
             <div>
                 <Grid container className={classes.form}>
@@ -95,27 +147,31 @@ const Login = () => {
                         >Login
                         </Typography>
     
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
                             <TextField
                                 label="Email"
-                                {...register('email', {
-                                    required: 'Email must not empty',
-                                    pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                                })}
-                            ></TextField>
-                            {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
+                                // {...register('email', {
+                                //     required: 'Email must not empty',
+                                //     pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                                // })}
+                                onChange={handleEmail}
+                        ></TextField>
+                       
+                            {/* {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
                             <p className={classes.errMessage}>
                                 {errors.email?.type === "pattern" && "Your Email address is invalid type"}
-                            </p>
+                            </p> */}
+
     
                             {/* password */}
                             <div className={classes.passwordArea}>
                                 <TextField
                                     label="Password"
-                                    {...register("password", {
-                                        required: "Password must not be empty",
-                                    })}
-                                    type={visible ? 'text' : 'password'}
+                                    // {...register("password", {
+                                    //     required: "Password must not be empty",
+                                    // })}
+                                    // type={visible ? 'text' : 'password'}
+                                    onChange={handlePassword}
                                 ></TextField>
                                 <span
                                     className={classes.visibilityIcon}
@@ -126,27 +182,24 @@ const Login = () => {
                                         <VisibilityIcon />
                                     }
                                 </span>
-                                <p className={classes.errMessage}>
-                                    {errors.password && errors.password.message}
-                                </p>
+                                {error &&
+                                    <p className={classes.errMessage}>
+                                        {error}
+                                    </p>
+                                }
                             </div>
     
                             {/* loginButton */}
                             <div>
                                 <Button
-                                    type="submit"
                                     variant="contained"
                                     color="primary"
-                                    className={classes.loginBtn}
-                                    disabled={loading}
+                                className={classes.loginBtn}
+                                onClick={onSubmit}
                                 >
                                     Login
-                                    {loading &&
-                                        <CircularProgress className={classes.progress} />
-                                    }
                                 </Button>
                             </div>
-    
                             {/* message */}
                             <div className={classes.toSignupMsg}>
                                 <small>
@@ -157,7 +210,7 @@ const Login = () => {
                                 </small>
                             </div>
     
-                        </form>
+                        {/* </form> */}
     
                     </Grid>
                     <Grid item sm />

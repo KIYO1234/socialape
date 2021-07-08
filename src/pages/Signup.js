@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     visibilityIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
     confirmPasswordArea: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     visibilityOffIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
     hover: {
@@ -81,7 +81,7 @@ const Signup = () => {
     // password
     const handlePassword = (event) => {
         setPassword(event.target.value);
-        console.log(password);
+        // console.log(password);
     };
     const handleType = () => {
         setVisible(!visible)
@@ -93,11 +93,11 @@ const Signup = () => {
 
     // console.log(errors);
     const onSubmit = async (data) => {
-        console.log(data);
+        // console.log(data);
         setLoading(true);
         await axios.post('/signup', data)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 alert('You have signed up successfully!');
                 setLoading(false);
                 // tokenをlocalStorageに保存
@@ -105,7 +105,8 @@ const Signup = () => {
                 history.push('/');
             })
             .catch(err => {
-                alert('Something went wrong... \n Try again !')
+                alert('Something went wrong... \n Try again !');
+                console.log(err);
                 setLoading(false);
             });
     };

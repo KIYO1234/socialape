@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import firebase from 'firebase';
+import { resolveTypeReferenceDirective } from "typescript";
 
 const initialState = {
     loginUser: {
@@ -18,6 +19,7 @@ const initialState = {
     },
     isLoggedIn: false,
     isLoading: false,
+    error: '',
 }
 
 // header
@@ -31,24 +33,73 @@ export const setAuthorizationHeader = (token) => {
 // Login
 export const fetchLoginUserAsync = createAsyncThunk(
     'screams/fetchLoginUserAsync',
-    async (data) => {
-        let fetchAfterLogin;
+    async (data, thunkAPI) => {
+        // console.log('fetchLogin','data: ', data, 'thunkAPI: ', thunkAPI);
+        
+        // let fetchAfterLogin;
+        // await axios.post('/login', data)
+        //     .then(res => {
+        //         setAuthorizationHeader(res.data.token);
+        //     })
+        //     .catch(err => {
+        //         console.log('login post error: ', err);
+        //         return err;
+        //     });
+        // await axios.get('/user')
+        //     .then(res => {
+        //         console.log(res.data);
+        //         fetchAfterLogin = res.data;
+        //     })
+        //     .catch(err => {
+        //         console.log('getUserData error', err);
+        //         return err;
+        //     });
+        // return fetchAfterLogin;
+
+        // ----------------------------------------------
+        // エラーだったらサーバーが返してくれるかの確認
+        // let fetchAfterLogin;
+        let token;
+        let error;
         await axios.post('/login', data)
             .then(res => {
-                setAuthorizationHeader(res.data.token);
+                // tokenが返ってくる
+                // console.log('post /login res.data.token: ', res.data.token);
+                token = res.data.token;
+                // return res.data.token;
             })
             .catch(err => {
-                console.log(err);
+                console.log('login post error: ', err.response.data);
+                error = err.response.data;
+                // return err.response.data;
             });
-        await axios.get('/user')
-            .then(res => {
-                console.log(res.data);
-                fetchAfterLogin = res.data;
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        return fetchAfterLogin;
+        if (token) {
+            return token;
+        } else {
+            return error;
+        }
+
+        // -----------------------------------------------
+
+        // error try catch
+        // let fetchAfterLogin;
+        // try {
+        //     let res = await axios.post('/login', data)
+        //     console.log('token', res.data.token)
+        //     setAuthorizationHeader(res.data.token);
+        // } catch (err) {
+        //     thunkAPI.rejectWithValue({ errMessage: 'Fetch error' })
+        //     return 
+        // }
+        // try {
+        //     let res = await axios.get('/user');
+        //     fetchAfterLogin = res.data;
+        //     console.log('fetchAfterLogin after get req: ', fetchAfterLogin)
+        // } catch (err) {
+        //     thunkAPI.rejectWithValue({ errMessage: 'Get Error'})
+        //     return 
+        // }
+        // return fetchAfterLogin
     }
 );
 // setUser
@@ -153,11 +204,29 @@ export const userSlice = createSlice({
             .addCase(fetchLoginUserAsync.pending, (state) => {
                 state.isLoading = true;
             })
+            // .addCase(fetchLoginUserAsync.fulfilled, (state, action) => {
+            //     console.log('fetchLoginUserAsync fulfilled: ', action.payload);
+            //     alert('Welcome !')
+            //     state.loginUser.isLoggedIn = true;
+            //     state.loginUser = action.payload;
+            //     state.isLoading = false;
+            // })
             .addCase(fetchLoginUserAsync.fulfilled, (state, action) => {
-                alert('Welcome !')
-                state.loginUser.isLoggedIn = true;
-                state.loginUser = action.payload;
-                state.isLoading = false;
+                console.log('fetchLoginUserAsync fulfilled: ', action.payload);
+                if (action.payload.general) {
+                    state.error = action.payload.general
+                    state.isLoading = false;
+                } else {
+                    alert('Welcome !')
+                    state.loginUser.isLoggedIn = true;
+                    localStorage.setItem('FBIdToken', `Bearer ${action.payload}`);
+                    // console.log('localStorage', localStorage);
+                    state.isLoading = false;
+                    state.error = '';
+                }
+            })
+            .addCase(fetchLoginUserAsync.rejected, (value) => {
+                console.log('fetchLoginUserAsync rejected: ', value)
             })
             .addCase(setUserAsync.fulfilled, (state, action) => {
                 state.isLoggedIn = true;

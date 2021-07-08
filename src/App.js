@@ -4,7 +4,7 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'; im
 import jwtDecode from 'jwt-decode';
 import AuthRoute from './util/AuthRoute';
 // Pages
-import { CommentDetails, Home, Login, Signup } from './pages/index';
+import { CommentDetails, Home, Login, Signup, User } from './pages/index';
 // Components
 import { Navbar, ProfileSingle } from './components/index';
 import { useSelector, useDispatch } from 'react-redux';
@@ -47,7 +47,6 @@ function App() {
     // expireしていた場合の処理
     if (decodedToken.exp * 1000 < new Date()) {
       alert('Your account has been expired');
-      console.log('Your account has been expired');
       // home に redirect する
       // こういう書き方もある
       // window.location.href = '/login';
@@ -100,6 +99,7 @@ function App() {
               />
               <Route exact path='/profile' component={ProfileSingle} />
               <Route exact path='/comment/details/:screamId' component={CommentDetails} />
+              <Route exact path='/users/:handle' component={User} />
               <Route exact path='/' component={Home} />
             </Switch>
           </div>

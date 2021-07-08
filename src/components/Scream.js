@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     image: {
         minWidth: 120,
         minHeight: 120,
+        cursor: 'pointer',
     },
     content: {
         padding: 25,
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Scream = (props) => {
+const Scream = (props) => {    
     const history = useHistory();
     const screams = useSelector(state => state.screams.screams);
     const credentials = useSelector(state => state.users.loginUser.credentials);
@@ -67,9 +68,7 @@ const Scream = (props) => {
     const classes = useStyles();
     dayjs.extend(relativeTime);
     const [like, setLike] = useState(false);
-
     const selectedScream = screams.filter(scream => scream.screamId === props.scream.screamId);
-    // console.log(selectedScream);
     const handleLike = () => {
         if (token) {
             if (like) {
@@ -82,12 +81,12 @@ const Scream = (props) => {
             setLike(!like);
         } else {
             alert('You are not logged in. \n Please login.')
-        }
-    }
+        };
+    };
 
     const goToCommentDetails = () => {
         history.push(`comment/details/${props.scream.screamId}`);
-    }
+    };
 
     const doDelete = (screamId) => {
         if (window.confirm('Are you sure you want to delete the scream?')) {
@@ -95,7 +94,11 @@ const Scream = (props) => {
         } else {
             alert('Canceled');
         }
-    }
+    };
+
+    const link = (path) => {
+        history.push(path);
+    };
 
     return (
         <div>
@@ -104,6 +107,7 @@ const Scream = (props) => {
                     className={classes.image}
                     image={props.scream.userImage}
                     title='Profile image'
+                    onClick={() => link(`/users/${props.scream.userHandle}`)}
                 />
                 <CardContent className={classes.content}>
                     <Typography
