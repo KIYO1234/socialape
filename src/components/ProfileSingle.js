@@ -37,16 +37,19 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 10,
     },
     profilePicture: {
-        width: '60%',
-        height: '60%',
+        width: 200,
+        height: 200,
+        borderRadius: '50%',
+        objectFit: 'cover',
     },
     profilePictureContainer: {
-        paddingTop: '10%',
+        paddingTop: 30,
         textAlign: 'center',
+        paddingBottom: 30,
     },
     userName: {
-        paddingTop: '10%',
-        paddingBottom: 10,
+        paddingTop: 30,
+        paddingBottom: 30,
         textAlign: 'center',
         color: '#33c9dc',
         fontSize: 30,
@@ -75,12 +78,18 @@ const useStyles = makeStyles((theme) => ({
     },
     iconsContainer: {
         textAlign: 'right',
+        paddingRight: 20,
     },
     notLoggedIn: {
         textAlign: 'center',
         marginTop: '40%',
         fontSize: 40,
     },
+    fileInput: {
+        textAlign: 'center',
+        paddingLeft: 60,
+        paddingTop: 20,
+    }
 }));
 
 const ProfileSingle = () => {
@@ -164,11 +173,13 @@ const ProfileSingle = () => {
                                     />
                                     {/* image upload */}
                                     <br />
-                                    <input
-                                        type='file'
-                                        id='imageInput'
-                                        onChange={handleImageChange}
-                                    />
+                                    <div className={classes.fileInput}>
+                                        <input
+                                            type='file'
+                                            id='imageInput'
+                                            onChange={handleImageChange}
+                                        />
+                                    </div>
                                 </div>
                             </Grid>
                             <Grid item xs={12} sm={6} >

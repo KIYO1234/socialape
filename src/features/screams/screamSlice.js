@@ -5,6 +5,8 @@ const initialState = {
     screams: [],
     comments: [],
     allComments: [],
+    relatedComments: [],
+    likes: [],
     isLoading: false,
 }
 
@@ -41,13 +43,28 @@ export const addScream = createAsyncThunk(
     }
 )
 
+// Fetch all likes
+export const fetchAllLikes = createAsyncThunk(
+    'screams/fetchAllLikes',
+    async () => {
+        let likes;
+        await axios.get('/likes')
+            .then(res => {
+                likes = res.data;
+            })
+        return likes;
+    }
+)
+
 // like a scream
 export const likeAsync = createAsyncThunk(
     'screams/likeAsync',
     async (selectedScream) => {
+        console.log('selected', selectedScream)
+        
         const FBIdToken = localStorage.FBIdToken;
         axios.defaults.headers.common['Authorization'] = FBIdToken;
-        await axios.get(`/scream/${selectedScream[0].screamId}/like`)
+        await axios.get(`/scream/${selectedScream.screamId}/like`)
             .then(res => {
                 console.log('likeAsync res.data', res.data)
             })
@@ -60,7 +77,7 @@ export const likeAsync = createAsyncThunk(
 export const unlikeAsync = createAsyncThunk(
     'screams/unlikeAsync',
     async (selectedScream) => {
-        await axios.get(`/scream/${selectedScream[0].screamId}/unlike`).then(res => {
+        await axios.get(`/scream/${selectedScream.screamId}/unlike`).then(res => {
             console.log('likeAsync res.data', res.data)
         })
         return selectedScream;
@@ -121,6 +138,20 @@ export const fetchAllCommentsAsync = createAsyncThunk(
     }
 )
 
+// Fetch related screams
+export const fetchRelatedScreams = createAsyncThunk(
+    'screams/fetchRelatedScreams',
+    async (screamId) => {
+        console.log('screamId', screamId);
+        let relatedComments;
+        await axios.get(`/comments/${screamId}`)
+            .then(res => relatedComments = res.data)
+            .catch(err => console.log(err));
+        return relatedComments;
+    }
+)
+
+
 export const screamSlice = createSlice({
     name: 'screams',
     initialState,
@@ -132,6 +163,15 @@ export const screamSlice = createSlice({
             const filteredScreams = state.screams.filter(scream => scream.screamId !== action.payload);
             state.screams = filteredScreams;
         },
+        addRelatedComment: (state, action) => {
+            console.log('addRelatedComment', action.payload);
+            state.relatedComments = [action.payload, ...state.relatedComments];
+            const index = state.screams.findIndex(scream => scream.screamId === action.payload.screamId);
+            console.log(index)
+            
+            // state.screams[index].commentCount += 1;
+            state.allComments = [action.payload, ...state.allComments];
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -149,11 +189,13 @@ export const screamSlice = createSlice({
                 state.screams = [action.payload, ...state.screams]
             })
             .addCase(likeAsync.fulfilled, (state, action) => {
-                const index = state.screams.findIndex(scream => scream.screamId === action.payload[0].screamId);
+                const index = state.screams.findIndex(scream => scream.screamId === action.payload.screamId);
                 state.screams[index].likeCount += 1;
             })
             .addCase(unlikeAsync.fulfilled, (state, action) => {
-                const index = state.screams.findIndex(scream => scream.screamId === action.payload[0].screamId);
+                console.log('unLikeAsync.fulfilled', action.payload);
+                
+                const index = state.screams.findIndex(scream => scream.screamId === action.payload.screamId);
                 state.screams[index].likeCount -= 1;
             })
             .addCase(commentAsync.fulfilled, (state, action) => {
@@ -173,8 +215,24 @@ export const screamSlice = createSlice({
                 state.allComments = action.payload;
                 state.isLoading = false;
             })
+            .addCase(fetchRelatedScreams.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(fetchRelatedScreams.fulfilled, (state, action) => {
+                console.log('fetchRelatedScreams fulfilled', action.payload);
+                state.relatedComments = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchAllLikes.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchAllLikes.fulfilled, (state, action) => {
+                console.log('fetchAllLikes.fulfilled', action.payload);
+                state.likes = action.payload;
+                state.isLoading = false;
+            })
     }
 });
 
-export const { deleteScream } = screamSlice.actions;
+export const { deleteScream, addRelatedComment } = screamSlice.actions;
 export default screamSlice.reducer

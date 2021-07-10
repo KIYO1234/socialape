@@ -10,9 +10,12 @@ import { Loading, Profile } from '../components/index';
 
 const useStyles = makeStyles((theme) => ({
     screamsContainer: {
-        padding: '5%',
-        paddingRight: 0,
+        // padding: '5%',
+        // paddingRight: 0,
     },
+    screamArea: {
+        width: '95%',
+    }
 }));
 
 const Home = () => {
@@ -40,7 +43,7 @@ const Home = () => {
                         container
                         className={classes.screamsContainer}
                     >
-                        <Grid item sm={8} xs={12}>
+                        <Grid item sm={8} xs={12} className={classes.screamArea}>
                             {screams.map((scream, index) =>
                                 <Scream key={index} scream={scream} />)
                             }

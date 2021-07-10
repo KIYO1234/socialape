@@ -13,10 +13,15 @@ const useStyles = makeStyles({
     commentContainer: {
         marginBottom: 15,
         padding: '3%',
+        width: '74%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     userImage: {
-        maxWidth: 210,
-        maxHeight: 200,
+        width: 150,
+        height: 150,
+        borderRadius: '50%',
+        objectFit: 'cover',
     },
     parentFlexContainer: {
         display: 'flex',
@@ -70,7 +75,7 @@ const CommentDetails = () => {
                     {reloadComments.map((comment, index) => (
                         <Card className={classes.commentContainer}>
                             <Grid container className={classes.parentFlexContainer}>
-                                <Grid item xs={12} sm={5} className={classes.pictureGrid}>
+                                <Grid item xs={12} sm={4} className={classes.pictureGrid}>
                                     <div className={classes.imgContainer}>
                                         <img className={classes.userImage} src={comment.userImage} alt='pic' />
                                     </div>
@@ -80,7 +85,7 @@ const CommentDetails = () => {
                                     {/* <div>Replying to {comment.}</div> */}
                                     <div key={index}>{comment.body}</div>
                                 </Grid>
-                                <Grid item xs={12} sm={2}>
+                                <Grid item xs={12} sm={3}>
                                     <div className={classes.timeText}>
                                         {dayjs(comment.createdAt).fromNow()}
                                     </div>

@@ -9,7 +9,8 @@ import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRigh
 import AddIcon from '@material-ui/icons/Add';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AddScream } from './index';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutAsync } from '../features/users/userSlice';
 
 const useStyles = makeStyles((theme) => ({
     list: {
@@ -32,17 +33,20 @@ const useStyles = makeStyles((theme) => ({
         right: 20,
     },
     userImage: {
-        maxWidth: 50,
+        // maxWidth: 50,
+        width: 50,
         height: 50,
         borderRadius: '50%',
+        objectFit: 'cover',
         display: 'block',
-        position: 'fixed',
-        left: '46%',
+        // position: 'fixed',
+        // left: '44%',
         cursor: 'pointer',
     },
 }));
 
 const SideDrawer = () => {
+    const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
     const imageUrl = useSelector(state => state.users.loginUser.credentials.imageUrl);
@@ -58,6 +62,16 @@ const SideDrawer = () => {
     const link = (path) => {
         history.push(path);
     }
+    const logout = async () => {
+        if (window.confirm('Are you sure you want to logout?')) {
+            await dispatch(logoutAsync());
+            alert('Good Bye !');
+            history.push('/');
+        } else {
+            alert('Canceled');
+            return false;
+        };
+    };
 
     return (
         <>
@@ -71,13 +85,7 @@ const SideDrawer = () => {
                     />
                 </IconButton>
                 {isLoggedIn ?
-                    <>
-                        <img
-                            src={imageUrl} alt='userImage'
-                            className={classes.userImage}
-                            onClick={() => link('/profile')}
-                        />
-                        
+                    <>  
                         <div className={classes.addIconContainer}>
                             <AddScream />
                         </div>
@@ -94,6 +102,14 @@ const SideDrawer = () => {
                                 className={classes.drawer}
                             >
                                 <List>
+                                    <ListItem>
+                                        <img
+                                            src={imageUrl} alt='userImage'
+                                            className={classes.userImage}
+                                            onClick={() => link('/profile')}
+                                        />
+                                    </ListItem>
+                                    <Divider />
                                     <ListItem
                                         button
                                         onClick={() => link('/')}
@@ -101,23 +117,20 @@ const SideDrawer = () => {
                                         <ListItemText>HOME</ListItemText>
                                         <HomeIcon />
                                     </ListItem>
+                                    <Divider />
                                     <ListItem
                                         button
-                                        onClick={() => link('/signup')}
+                                        onClick={logout}
                                     >
                                         <ListItemText>LOGOUT</ListItemText>
                                     </ListItem>
+                                    <Divider />
                                 </List>
                             </div>
                         </Drawer>
                     </>
                     :
                     <>
-                        <img
-                            src='https://firebasestorage.googleapis.com/v0/b/socialape-73b9a.appspot.com/o/person.jpg?alt=media&token=d747a225-5ee1-4528-b5d6-d6180bb21b86' alt='userImage'
-                            className={classes.userImage}
-                            onClick={() => link('/profile')}
-                        />
                         <div className={classes.addIconContainer}>
                             <AddScream />
                         </div>
@@ -141,18 +154,21 @@ const SideDrawer = () => {
                                         <ListItemText>HOME</ListItemText>
                                         <HomeIcon />
                                     </ListItem>
+                                    <Divider/>
                                     <ListItem
                                         button
                                         onClick={() => link('/login')}
                                     >
                                         <ListItemText>LOGIN</ListItemText>
                                     </ListItem>
+                                    <Divider />
                                     <ListItem
                                         button
                                         onClick={() => link('/signup')}
                                     >
                                         <ListItemText>SIGNUP</ListItemText>
                                     </ListItem>
+                                    <Divider />
                                 </List>
                             </div>
                         </Drawer>

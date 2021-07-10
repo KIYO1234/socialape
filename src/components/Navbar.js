@@ -35,13 +35,15 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
     },
     userImage: {
-        maxWidth: 50,
+        width: 50,
         height: 50,
         borderRadius: '50%',
+        objectFit: 'cover',
         display: 'block',
         position: 'fixed',
         left: '5%',
         cursor: 'pointer',
+
     }
 }));
 
@@ -106,8 +108,8 @@ const Navbar = () => {
                                     className={classes.userImage}
                                     onClick={() => link('/profile')}
                                 />
-                                <Button color="inherit" component={Link} to='/login'>Login</Button>
                                 <Button color="inherit" component={Link} to='/'>Home</Button>
+                                <Button color="inherit" component={Link} to='/login'>Login</Button>
                                 <Button color="inherit" component={Link} to='/signup'>Signup</Button>
                             </>
 

@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, IconButton } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import AppIcon from '../images/monkey-icon.png'
+import AppIcon from '../images/roundChat.jpeg'
 import Typography from "@material-ui/core/Typography";
 import { useForm } from "react-hook-form";
 import Button from "@material-ui/core/Button";
@@ -14,6 +14,10 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { fetchLoginUserAsync, login } from '../features/users/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loading } from '../components';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { convertCompilerOptionsFromJson } from 'typescript';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -21,8 +25,9 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         margin: '20px auto 20px auto',
-        width: 70,
+        width: 60,
         height: 60,
+        borderRadius: '50%',
     },
     errMessage: {
         color: "red",
@@ -42,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
     },
     passwordArea: {
-        position: 'relative'
+        position: 'relative',
     },
     visibilityIcon: {
         position: 'absolute',
@@ -50,22 +55,30 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         cursor: 'pointer',
     },
+    textFieldContainer: {
+        position: 'relative',
+    },
+    clearIcon: {
+        position: 'absolute',
+        right: -12,
+        top: 5,
+    },
+    field: {
+        width: '80%'
+    },
+    mainGrid: {
+        width: '100%',
+    }
 }));
 
 const Login = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset,} = useForm();
     const isLoading = useSelector(state => state.users.isLoading);
     const isLoggedIn = useSelector(state => state.users.isLoggedIn)
     const error = useSelector(state => state.users.error);
-    const [localError, setLocalError] = useState('');
     // useState
     const [visible, setVisible] = useState(false);
     const [email, setEmail] = useState('');
@@ -77,15 +90,12 @@ const Login = () => {
         setPassword(event.target.value);
     }, [setPassword]);
 
-    const errorsObj = {
-        emailError: '',
-        passwordError: ''
-    };
-    
-
     // handlers
     const handleType = () => {
         setVisible(!visible)
+    };
+    const clear = () => {
+        setEmail('');
     };
 
     // functions
@@ -132,14 +142,14 @@ const Login = () => {
 
     if (!error && isLoggedIn) {
         history.push('/')
-    }
-    
+    }    
+
     if (!isLoading) {
         return (
             <div>
                 <Grid container className={classes.form}>
-                    <Grid item sm />
-                    <Grid item sm>
+                    <Grid item md sm={3} xs={2}/>
+                    <Grid item md sm={6} xs={8} className={classes.mainGrid}>
                         <img className={classes.image} src={AppIcon} alt="monkey" />
                         <Typography
                             variant="h5"
@@ -148,72 +158,84 @@ const Login = () => {
                         </Typography>
     
                         {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+
+                        <div className={classes.textFieldContainer}>
                             <TextField
                                 label="Email"
+                                autoComplete='email'
+                                onChange={handleEmail}
+                                value={email}
+                                    type='search'
+                                    fullWidth
                                 // {...register('email', {
                                 //     required: 'Email must not empty',
                                 //     pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
                                 // })}
-                                onChange={handleEmail}
-                        ></TextField>
-                       
+                            ></TextField>
                             {/* {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
                             <p className={classes.errMessage}>
                                 {errors.email?.type === "pattern" && "Your Email address is invalid type"}
                             </p> */}
-
-    
-                            {/* password */}
-                            <div className={classes.passwordArea}>
-                                <TextField
-                                    label="Password"
-                                    // {...register("password", {
-                                    //     required: "Password must not be empty",
-                                    // })}
-                                    // type={visible ? 'text' : 'password'}
-                                    onChange={handlePassword}
-                                ></TextField>
-                                <span
-                                    className={classes.visibilityIcon}
-                                    onClick={handleType}
-                                >
-                                    {visible ?
-                                        <VisibilityOffIcon /> :
-                                        <VisibilityIcon />
-                                    }
-                                </span>
-                                {error &&
-                                    <p className={classes.errMessage}>
-                                        {error}
-                                    </p>
+                            {/* <IconButton
+                                className={classes.clearIcon}
+                                onClick={clear}
+                            >
+                                <HighlightOffIcon />
+                            </IconButton> */}
+                        </div>
+                    
+                        {/* password */}
+                        <div className={classes.passwordArea}>
+                            <TextField
+                                label="Password"
+                                autoComplete='current-password'
+                                type={visible ? 'text' : 'password'}
+                                onChange={handlePassword}
+                                    value={password}
+                                    fullWidth
+                                // {...register("password", {
+                                //     required: "Password must not be empty",
+                                // })}
+                            ></TextField>
+                            <span
+                                className={classes.visibilityIcon}
+                                onClick={handleType}
+                            >
+                                {visible ?
+                                    <VisibilityOffIcon /> :
+                                    <VisibilityIcon />
                                 }
-                            </div>
-    
-                            {/* loginButton */}
-                            <div>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                className={classes.loginBtn}
-                                onClick={onSubmit}
-                                >
-                                    Login
-                                </Button>
-                            </div>
-                            {/* message */}
-                            <div className={classes.toSignupMsg}>
-                                <small>
-                                    <div>Don't have an account?</div>
-                                    <div>signup
-                                        <Link to='/signup'> here</Link>
-                                    </div>
-                                </small>
-                            </div>
-    
+                            </span>
+                            {error &&
+                                <p className={classes.errMessage}>
+                                    {error}
+                                </p>
+                            }
+                        </div>
+
+                        {/* loginButton */}
+                        <div>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                            className={classes.loginBtn}
+                            onClick={onSubmit}
+                            >
+                                Login
+                            </Button>
+                        </div>
+                        {/* message */}
+                        <div className={classes.toSignupMsg}>
+                            <small>
+                                <div>Don't have an account?</div>
+                                <div>signup
+                                    <Link to='/signup'> here</Link>
+                                </div>
+                            </small>
+                        </div>
                         {/* </form> */}
-    
                     </Grid>
-                    <Grid item sm />
+                    <Grid item md sm={3} xs={2} />
                 </Grid>
             </div>
         ); 

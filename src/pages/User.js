@@ -15,8 +15,9 @@ import CommentIcon from '@material-ui/icons/Comment';
 
 const useStyles = makeStyles({
     userImage: {
-        maxWidth: 150,
+        width: 150,
         height: 150,
+        objectFit: 'cover',
         borderRadius: '50%',
         display: 'block',
         cursor: 'pointer',
@@ -24,9 +25,10 @@ const useStyles = makeStyles({
         marginRight: 'auto',
     },
     smDownUserImage: {
-        maxWidth: 150,
+        width: 150,
         height: 150,
         borderRadius: '50%',
+        objectFit: 'cover',
         display: 'block',
         cursor: 'pointer',
         marginRight: 'auto',
@@ -82,9 +84,10 @@ const useStyles = makeStyles({
         maxWidth: 700,
     },
     userScreamImage: {
-        maxWidth: 50,
+        width: 50,
         height: 50,
         borderRadius: '50%',
+        objectFit: 'cover',
         display: 'block',
         cursor: 'pointer',
     },
@@ -173,6 +176,7 @@ const User = () => {
     const history = useHistory();
     const classes = useStyles();
     const [userData, setUserData] = useState();
+    
     const { handle } = useParams();
     dayjs.extend(relativeTime);
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles, IconButton, Button, Grid } from '@material-ui/core'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -23,19 +23,30 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 20,
         // width: 450,
         height: 250,
-        width: '90%',
+        width: '75%',
+        minWidth: 250,
         // height: '60%',
-        maxHeight: 300,
+        maxHeight: 200,
         position: 'relative',
+        paddingLeft: '5%',
+        paddingTop: '5%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
 
     image: {
-        minWidth: 120,
-        minHeight: 120,
+        // minWidth: 120,
+        // minHeight: 120,
         cursor: 'pointer',
+        width: 120,
+        height: 120,
+        borderRadius: '50%',
+        objectFit: 'cover',
     },
     content: {
         padding: 25,
+        paddingTop: 0,
+        paddingRight: 5,
         objectFit: "cover",
     },
     favoriteContainer: {
@@ -46,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
     screamBody: {
         marginTop: 15,
+        cursor: 'pointer',
     },
     addCommentContainer: {
         display: 'inlineBlock',
@@ -63,26 +75,49 @@ const Scream = (props) => {
     const history = useHistory();
     const screams = useSelector(state => state.screams.screams);
     const credentials = useSelector(state => state.users.loginUser.credentials);
+    const handle = useSelector(state => state.users.loginUser.credentials.handle);
     const token = localStorage.FBIdToken;
     const dispatch = useDispatch();
     const classes = useStyles();
     dayjs.extend(relativeTime);
     const [like, setLike] = useState(false);
     const selectedScream = screams.filter(scream => scream.screamId === props.scream.screamId);
+    // const handleLike = () => {
+    //     if (token) {
+    //         if (like) {
+    //             console.log('unlike');
+    //             dispatch(unlikeAsync(selectedScream[0]));
+    //         } else {
+    //             console.log('like');
+    //             dispatch(likeAsync(selectedScream[0]));
+    //         }
+    //         setLike(!like);
+    //     } else {
+    //         alert('You are not logged in. \n Please login.')
+    //     };
+    // };
     const handleLike = () => {
         if (token) {
-            if (like) {
-                console.log('unlike');
-                dispatch(unlikeAsync(selectedScream));
-            } else {
-                console.log('like');
-                dispatch(likeAsync(selectedScream));
-            }
-            setLike(!like);
+            dispatch(likeAsync(selectedScream[0]));
+            setLike(true);
+            // setLike(!like);
+            // isLikedByUser = true;
+            setIsLikedByUser(true);
         } else {
             alert('You are not logged in. \n Please login.')
         };
     };
+    const handleUnlike = () => {
+        if (token) {
+            dispatch(unlikeAsync(selectedScream[0]));
+            setLike(false);
+            // setLike(!like);
+            // isLikedByUser = false;
+            // setIsLikedByUser(false);
+        } else {
+            alert('You are not logged in. \n Please login.')
+        };
+    }
 
     const goToCommentDetails = () => {
         history.push(`comment/details/${props.scream.screamId}`);
@@ -100,6 +135,29 @@ const Scream = (props) => {
         history.push(path);
     };
 
+    const likes = useSelector(state => state.screams.likes);
+    // console.log('likes', likes);
+    const likesByUser = likes.filter(like => like.userHandle === handle);
+    // console.log('likesByUser', likesByUser);
+    
+    const [isLikedByUser, setIsLikedByUser] = useState(false);
+    // let isLikedByUser;
+    
+    useEffect(() => {
+        if (likesByUser.findIndex(like => like.screamId === props.scream.screamId) !== -1) {
+            // isLikedByUser = true;
+            setLike(true);
+            // setIsLikedByUser(true);
+        } else {
+            // isLikedByUser = false;
+            setLike(false);
+            // setIsLikedByUser(false);
+        };
+        // console.log('isLikedByUser', isLikedByUser);
+    }, []);
+
+    console.log(isLikedByUser);
+    
     return (
         <div>
             <Card className={classes.card}>
@@ -128,6 +186,7 @@ const Scream = (props) => {
                         <div
                             variant='body1'
                             className={classes.screamBody}
+                            onClick={() => link(`/users/${props.scream.userHandle}/scream/${props.scream.screamId}`)}
                         >
                                 {props.scream.body}
                         </div>
@@ -144,7 +203,7 @@ const Scream = (props) => {
                         </IconButton>
                         {props.scream.commentCount}
                         {like ?
-                            <IconButton onClick={handleLike}>
+                            <IconButton onClick={handleUnlike}>
                                 <FavoriteIcon
                                     color='secondary'
                                 />

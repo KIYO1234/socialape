@@ -30,8 +30,12 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 10,
     },
     profilePicture: {
-        height: '70%',
-        width: '70%',
+        // height: '70%',
+        // width: '70%',
+        width: 200,
+        height: 200,
+        borderRadius: '50%',
+        objectFit: 'cover',
     },
     profilePictureContainer: {
         paddingTop: 15,
@@ -64,9 +68,13 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         position: 'relative',
+        width: 300,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     notLoggedInCard: {
         padding: 30,
+        paddingTop: 0,
     },
     buttonsContainer: {
         marginTop: 20,
@@ -168,10 +176,9 @@ const Profile = () => {
         return (
             <>
                 <Card className={classes.notLoggedInCard}>
-                    <div>You are not logged in</div>
-                    <div>Please login</div>
-                    <br/>
-                    <div>If you don't have your account, please signup</div>
+                    <p>No profile found.</p>
+                    <p>Please login or signup !</p>
+                    
                     <div className={classes.buttonsContainer}>
                         <div>
                             <Button
