@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import { useHistory, Link } from 'react-router-dom';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { fetchLoginUserAsync } from '../features/users/userSlice';
+import { fetchLoginUserAsync, setUserAsync } from '../features/users/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loading } from '../components';
 
@@ -90,8 +90,8 @@ const Login = () => {
         dispatch(fetchLoginUserAsync({ email: email, password: password }))
     }
 
-    console.log('isLoggedIn: ', isLoggedIn);
     if (isLoggedIn) {
+        dispatch(setUserAsync());
         history.push('/')
     }
 

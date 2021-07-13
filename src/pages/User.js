@@ -232,8 +232,11 @@ const User = () => {
                 <div className={classes.hiddenFlex}>
                     <div className={classes.screamsArea}>
 
-                        {userData.screams.map(scream => (
-                            <Card className={classes.screamCard}>
+                        {userData.screams.map((scream, index) => (
+                            <Card
+                                className={classes.screamCard}
+                                key={index}
+                            >
                                 <div className={classes.screamTopContainer}>
                                     <div>
                                         <img

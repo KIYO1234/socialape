@@ -110,15 +110,12 @@ const EachScream = () => {
     dayjs.extend(relativeTime);
     const [like, setLike] = useState(false);
     const { screamId } = useParams();
-    console.log(screamId);
     const [userData, setUserData] = useState();
     const relatedComments = useSelector(state => state.screams.relatedComments);
     const screams = useSelector(state => state.screams.screams);
     
     const chosenScream = screams.filter(scream => scream.screamId === screamId);
-    const relatedScream = (chosenScream[0]);
-    console.log('relatedScream', relatedScream);
-    
+    const relatedScream = (chosenScream[0]);    
     
     useEffect(() => {
         if (screamId) {            
@@ -139,14 +136,12 @@ const EachScream = () => {
             .catch(err => console.log(err)
             )
         }, [handle])
-    console.log('userData: ', userData);
 
     let scream = '';
     if (userData) {
         const screams = userData.screams;
         const selectedScream = screams.filter(scream => scream.screamId === screamId);
         scream = selectedScream[0];
-        console.log('scream', scream);
     }
 
     const doDelete = (screamId) => {

@@ -133,17 +133,18 @@ export const userSlice = createSlice({
                     state.error = action.payload.general
                     state.isLoading = false;
                 } else {
-                    alert('Welcome !')
-                    state.loginUser.isLoggedIn = true;
+                    state.loginUser.notifications = []
                     localStorage.setItem('FBIdToken', `Bearer ${action.payload}`);
                     state.isLoading = false;
                     state.error = '';
+                    state.isLoggedIn = true;
+                    alert('Welcome !');
                 }
             })
             .addCase(fetchLoginUserAsync.rejected, (value) => {
                 console.log('fetchLoginUserAsync rejected: ', value)
             })
-            .addCase(setUserAsync.fulfilled, (state, action) => {
+            .addCase(setUserAsync.fulfilled, (state, action) => {                
                 state.isLoggedIn = true;
                 state.loginUser = action.payload;
                 state.isLoading = false;
