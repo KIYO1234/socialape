@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'; import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'; import { createTheme } from '@material-ui/core';
 import jwtDecode from 'jwt-decode';
 import AuthRoute from './util/AuthRoute';
 // Pages
@@ -12,7 +12,7 @@ import { fetchAllCommentsAsync, fetchAllLikes, fetchScreamsAsync } from './featu
 import { useEffect } from 'react';
 import { setUserAsync, logoutAsync } from './features/users/userSlice';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       light: '#33c9dc',
@@ -32,13 +32,21 @@ const theme = createMuiTheme({
 
 function App() {
   const dispatch = useDispatch();
-  const loginUser = useSelector(state => state.users.loginUser);
-  console.log(loginUser);
-  let isLoggedIn = useSelector(state => state.users.isLoggedIn);
-  console.log(isLoggedIn);
   let authenticated = false;
-  // localStorage
   const token = localStorage.FBIdToken;
+  // const screams = useSelector(state => state.screams.screams);
+  // const handle = useSelector(state => state.users.loginUser.credentials.handle);
+  // const likes = useSelector(state => state.screams.likes);
+  // const likesByUser = likes.filter(like => like.userHandle === handle);
+  // console.log('likesByUser: ', likesByUser);
+  // const screams = useSelector(state => state.screams.screams);
+  // console.log('screams', screams);
+  // let isLikedByUser = []
+  // for (let i = 0; i < screams.length; i++){
+  //     isLikedByUser.push(likesByUser.findIndex(like => like.screamId === screams[i].screamId) !== -1)
+  // }
+  // console.log('isLikedByUser', isLikedByUser);
+  
 
   if (token) {
     const decodedToken = jwtDecode(token)

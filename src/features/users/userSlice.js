@@ -197,6 +197,17 @@ export const userSlice = createSlice({
             axios.post('/user', action.payload).then(res => {
                 console.log(res.data)
             })
+        },
+        markNotificationsRead: (state, action) => {
+            if (action.payload.length > 0) {
+                const FBIdToken = localStorage.FBIdToken;
+                axios.defaults.headers.common['Authorization'] = FBIdToken;
+                axios.post('/notifications', action.payload)
+                    .catch(err => console.log(
+                    err)
+                )
+                state.loginUser.notifications.forEach(notification => notification.read = true)
+            }
         }
     },
     extraReducers: (builder) => {
@@ -267,5 +278,5 @@ export const userSlice = createSlice({
     }
 });
 
-export const { editUserDetails, changeUserDetails } = userSlice.actions;
+export const { editUserDetails, changeUserDetails, markNotificationsRead } = userSlice.actions;
 export default userSlice.reducer;

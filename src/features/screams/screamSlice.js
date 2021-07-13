@@ -8,6 +8,7 @@ const initialState = {
     relatedComments: [],
     likes: [],
     isLoading: false,
+    // isLikedByUser: [],
 }
 
 // Async
@@ -92,7 +93,7 @@ export const commentAsync = createAsyncThunk(
         axios.defaults.headers.common['Authorization'] = FBIdToken;
         console.log('commentAsync', data);
         let response;
-        await axios.post(`/scream/${data.scream.screamId}/comment`, {body: data.comment})
+        await axios.post(`/scream/${data.scream.screamId}/comment`, {body: data.comment, scream: data.scream, sender: data.sender})
             .then(res => {
                 console.log(res.data);
                 response = res.data;
@@ -171,7 +172,11 @@ export const screamSlice = createSlice({
             
             // state.screams[index].commentCount += 1;
             state.allComments = [action.payload, ...state.allComments];
-        }
+        },
+        // setIsLikedByUser: (state, action) => {
+        //     console.log('setIsLikedByUser', action.payload)
+        //     state.isLikedByUser = action.payload
+        // }
     },
     extraReducers: (builder) => {
         builder
@@ -189,6 +194,8 @@ export const screamSlice = createSlice({
                 state.screams = [action.payload, ...state.screams]
             })
             .addCase(likeAsync.fulfilled, (state, action) => {
+                console.log('likeAsync.fulfilled', action.payload);
+                
                 const index = state.screams.findIndex(scream => scream.screamId === action.payload.screamId);
                 state.screams[index].likeCount += 1;
             })

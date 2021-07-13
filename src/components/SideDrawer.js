@@ -75,7 +75,7 @@ const SideDrawer = () => {
 
     return (
         <>
-            <Hidden only={['sm', 'md', 'lg', 'xl']}>
+            <Hidden smUp>
                 <IconButton
                     onClick={toggleDrawer(true)}
                     className={classes.sideDrawer}

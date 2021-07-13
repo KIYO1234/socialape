@@ -34,7 +34,8 @@ const useStyles = makeStyles({
 });
 
 const Comment = (props) => {
-    const isLoggedIn = useSelector(state => state.users.isLoggedIn);    
+    const isLoggedIn = useSelector(state => state.users.isLoggedIn);
+    const userHandle = useSelector(state => state.users.loginUser.credentials.handle);
     const dispatch = useDispatch();
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -51,7 +52,7 @@ const Comment = (props) => {
     };
     const onSubmit = () => {
         if (isLoggedIn) {
-            dispatch(commentAsync({ comment: comment, scream: props.scream }));
+            dispatch(commentAsync({ comment: comment, scream: props.scream, sender: userHandle }));
             handleClose();
             setComment('');
         } else {

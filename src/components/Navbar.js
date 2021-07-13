@@ -10,6 +10,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { AddScream, Notifications } from './index';
 
 const useStyles = makeStyles((theme) => ({
     menu: {
@@ -87,18 +88,22 @@ const Navbar = () => {
                                         onClick={() => link('/profile')}
                                     />
                                 </IconButton> */}
-                                <IconButton>
+                                <div>
+                                    <AddScream />
+                                </div>
+                                {/* <IconButton>
                                     <AddIcon className={classes.addIcon} />
-                                </IconButton>
+                                </IconButton> */}
                                 <IconButton>
                                     <HomeIcon
                                         className={classes.homeIcon}
                                         onClick={() => link('/')}
                                     />
                                 </IconButton>
-                                <IconButton>
+                                {/* <IconButton>
                                     <NotificationsIcon className={classes.notificationsIcon} />
-                                </IconButton>
+                                </IconButton> */}
+                                <Notifications />
                             </>
                             :
                             <>

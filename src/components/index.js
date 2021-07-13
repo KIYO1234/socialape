@@ -7,3 +7,4 @@ export { default as EditDetails } from './EditDetails';
 export { default as Comment } from './Comment';
 export { default as RelatedComment } from './RelatedComment';
 export { default as AddScream } from './AddScream';
+export { default as Notifications } from './Notifications';

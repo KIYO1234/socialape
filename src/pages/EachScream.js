@@ -122,9 +122,9 @@ const EachScream = () => {
     
     const chosenScream = screams.filter(scream => scream.screamId === screamId);
     const relatedScream = (chosenScream[0]);
-    const [isLikedByUser, setIsLikedByUser] = useState(false);
-
-
+    console.log('relatedScream', relatedScream);
+    
+    // const [isLikedByUser, setIsLikedByUser] = useState(false);    
     
     // let relatedScreams;
     useEffect(() => {
@@ -139,7 +139,22 @@ const EachScream = () => {
     // console.log('relatedScreams: ', relatedScreams)
 
     const { handle } = useParams();
-    console.log(handle);
+    console.log('handle', handle);
+    const likes = useSelector(state => state.screams.likes);
+    console.log('likes', likes)
+    const likesByUser = likes.filter(like => like.userHandle === handle);
+    console.log('likesByUser', likesByUser);
+    
+    const likeByUser = likesByUser.findIndex(like => like.screamId === screamId);
+    console.log('likeByUser', likeByUser);
+    
+    // useEffect(() => {
+    //     if (likeByUser === -1) {
+    //         setLike(false);
+    //     } else {
+    //         setLike(true);
+    //     }
+    // }, [likeByUser])
     
     dayjs.extend(relativeTime);
     useEffect(() => {
@@ -163,6 +178,8 @@ const EachScream = () => {
     const doDelete = (screamId) => {
         if (window.confirm('Are you sure you want to delete the scream?')) {
             dispatch(deleteScream(screamId));
+            alert('deleted');
+            history.push('/');
         } else {
             alert('Canceled');
         }
@@ -259,7 +276,8 @@ const EachScream = () => {
                                     <FavoriteBorderIcon />
                                 </IconButton>
                             }
-                            {scream.likeCount}
+                            {relatedScream && relatedScream.likeCount}
+                            {/* {scream.likeCount} */}
     
                             {scream.userHandle === credentials.handle &&
                                 <IconButton
@@ -272,7 +290,10 @@ const EachScream = () => {
                     </CardContent>
                 </Card>
                 {relatedComments.map((comment, index) => (
-                    <Card className={classes.commentContainer}>
+                    <Card
+                        className={classes.commentContainer}
+                        key={index}
+                    >
                         <Grid container className={classes.parentFlexContainer}>
                             <Grid item xs={12} sm={4} className={classes.pictureGrid}>
                                 <div className={classes.imgContainer}>

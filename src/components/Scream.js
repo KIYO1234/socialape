@@ -8,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 import dayjs from "dayjs";
 // Facebookとかでよくある（2 days ago）とかを作るやつ
 import relativeTime from "dayjs/plugin/relativeTime";
+import utc from 'dayjs/plugin/utc';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +17,8 @@ import CommentIcon from '@material-ui/icons/Comment';
 import { Comment } from './index';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { SettingsBackupRestore } from '@material-ui/icons';
+import { isPropertyAccessExpression } from 'typescript';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -71,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Scream = (props) => {    
+const Scream = (props) => {
     const history = useHistory();
     const screams = useSelector(state => state.screams.screams);
     const credentials = useSelector(state => state.users.loginUser.credentials);
@@ -80,29 +83,13 @@ const Scream = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     dayjs.extend(relativeTime);
-    const [like, setLike] = useState(false);
+    
     const selectedScream = screams.filter(scream => scream.screamId === props.scream.screamId);
-    // const handleLike = () => {
-    //     if (token) {
-    //         if (like) {
-    //             console.log('unlike');
-    //             dispatch(unlikeAsync(selectedScream[0]));
-    //         } else {
-    //             console.log('like');
-    //             dispatch(likeAsync(selectedScream[0]));
-    //         }
-    //         setLike(!like);
-    //     } else {
-    //         alert('You are not logged in. \n Please login.')
-    //     };
-    // };
+    
     const handleLike = () => {
         if (token) {
             dispatch(likeAsync(selectedScream[0]));
             setLike(true);
-            // setLike(!like);
-            // isLikedByUser = true;
-            setIsLikedByUser(true);
         } else {
             alert('You are not logged in. \n Please login.')
         };
@@ -111,18 +98,15 @@ const Scream = (props) => {
         if (token) {
             dispatch(unlikeAsync(selectedScream[0]));
             setLike(false);
-            // setLike(!like);
-            // isLikedByUser = false;
-            // setIsLikedByUser(false);
         } else {
             alert('You are not logged in. \n Please login.')
         };
     }
-
+    
     const goToCommentDetails = () => {
         history.push(`comment/details/${props.scream.screamId}`);
     };
-
+    
     const doDelete = (screamId) => {
         if (window.confirm('Are you sure you want to delete the scream?')) {
             dispatch(deleteScream(screamId));
@@ -130,33 +114,33 @@ const Scream = (props) => {
             alert('Canceled');
         }
     };
-
+    
     const link = (path) => {
         history.push(path);
     };
-
-    const likes = useSelector(state => state.screams.likes);
-    // console.log('likes', likes);
-    const likesByUser = likes.filter(like => like.userHandle === handle);
-    // console.log('likesByUser', likesByUser);
     
-    const [isLikedByUser, setIsLikedByUser] = useState(false);
-    // let isLikedByUser;
+    const [like, setLike] = useState(false);
+    // console.log('like', like);
     
-    useEffect(() => {
-        if (likesByUser.findIndex(like => like.screamId === props.scream.screamId) !== -1) {
-            // isLikedByUser = true;
-            setLike(true);
-            // setIsLikedByUser(true);
-        } else {
-            // isLikedByUser = false;
-            setLike(false);
-            // setIsLikedByUser(false);
-        };
-        // console.log('isLikedByUser', isLikedByUser);
-    }, []);
+    // const likes = useSelector(state => state.screams.likes);
+    // const likesByUser = likes.filter(like => like.userHandle === handle);
+    
+    
 
-    console.log(isLikedByUser);
+    // useEffect(() => {
+    //     // alert('reload');
+    //     console.log('screams rendered');
+    //     if (likesByUser.length > 0) {
+    //         if (likesByUser.findIndex(like => like.screamId === props.scream.screamId) !== -1) {            
+    //             setLike(true);
+    //         } else {
+    //             setLike(false);
+    //         };
+    //     }
+    // }, []);
+    dayjs.extend(utc);
+    const now = dayjs.utc().local().format();
+    // console.log('now: ', now);
     
     return (
         <div>
@@ -196,7 +180,6 @@ const Scream = (props) => {
 
                     {/* comment */}
                     <div className={classes.favoriteContainer}>
-                        {/* <Comment scream={props.scream}/> */}
                         <IconButton
                             onClick={goToCommentDetails}>
                             <CommentIcon/>

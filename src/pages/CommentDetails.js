@@ -73,7 +73,10 @@ const CommentDetails = () => {
             return (
                 <div>
                     {reloadComments.map((comment, index) => (
-                        <Card className={classes.commentContainer}>
+                        <Card
+                            className={classes.commentContainer}
+                            key={index}
+                        >
                             <Grid container className={classes.parentFlexContainer}>
                                 <Grid item xs={12} sm={4} className={classes.pictureGrid}>
                                     <div className={classes.imgContainer}>
