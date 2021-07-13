@@ -42,33 +42,20 @@ function App() {
 
   if (token) {
     const decodedToken = jwtDecode(token)
-    // console.log(decodedToken)
-    // expireする時間と今の時間を比較
-    // expireしていた場合の処理
     if (decodedToken.exp * 1000 < new Date()) {
       alert('Your account has been expired');
       console.log('Your account has been expired');
-      // home に redirect する
-      // こういう書き方もある
-      // window.location.href = '/login';
       authenticated = false;
-      // isLoggedIn = false;
       dispatch(logoutAsync());
       localStorage.removeItem('FBIdToken');
     }
   } else {
-    // console.log('nothing')
     authenticated = false;
-    // isLoggedIn = false;
-    // dispatch(logoutAsync());
   }
-
-  // console.log(localStorage.FBIdToken);
 
   useEffect(() => {
     console.log('App.js rendered');
     dispatch(fetchScreamsAsync());
-    // axios.get('/screams')
   }, [dispatch]);
   useEffect(() => {
     if (token) {
