@@ -34,10 +34,11 @@ const useStyles = makeStyles({
     }
 });
 
-const AddScream = (props) => {
+const AddScream = () => {
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);
     const dispatch = useDispatch();
     const classes = useStyles();
+
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -45,6 +46,7 @@ const AddScream = (props) => {
     const handleClose = () => {
         setOpen(false);
     };
+    
     const [newScream, setNewScream] = useState('');
     const handleScream = (event) => {
         setNewScream(event.target.value);

@@ -1,4 +1,4 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import screamReducer from '../features/screams/screamSlice';
 import userReducer from '../features/users/userSlice';
 

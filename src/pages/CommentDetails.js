@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
-import CommentIcon from '@material-ui/icons/Comment';
-import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles, IconButton, Button, Card, Grid } from '@material-ui/core';
-import { useHistory } from 'react-router';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { makeStyles, Card, Grid } from '@material-ui/core';
 import { Loading } from '../components';
-import { classicNameResolver } from 'typescript';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -25,32 +22,18 @@ const useStyles = makeStyles({
     },
     parentFlexContainer: {
         display: 'flex',
-        // justifyContent: 'center',
     },
     commentBody: {
-        // marginLeft: 80,
         marginRight: 'auto',
         marginLeft: 'auto',
         paddingLeft: 50,
-        // textAlign: 'center',
     },
     userHandle: {
-        // color: '#33c9dc',
         fontSize: 25,
         fontWeight: 'bold',
         marginBottom: 15,
-        // textAlign: 'center',
-
-        // marginRight: 'auto',
-        // marginLeft: 'auto',
-    },
-    pictureGrid: {
-        // marginRight: 'auto',
-        // marginLeft: 'auto',
     },
     imgContainer: {
-        // marginRight: 'auto',
-        // marginLeft: 'auto',
         textAlign: 'center',
     },
     timeText: {
@@ -85,7 +68,6 @@ const CommentDetails = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={5} className={classes.commentBody}>
                                     <div className={classes.userHandle}>{comment.userHandle}</div>
-                                    {/* <div>Replying to {comment.}</div> */}
                                     <div key={index}>{comment.body}</div>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { makeStyles, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@material-ui/core';
-import CommentIcon from '@material-ui/icons/Comment';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRelatedComment, commentAsync } from '../features/screams/screamSlice';
 import AddCommentIcon from '@material-ui/icons/AddComment';
@@ -32,8 +31,6 @@ const useStyles = makeStyles({
         bottom: 5,
     },
 });
-
-console.log(new Date().toISOString())
 
 const RelatedComment = (props) => {
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);

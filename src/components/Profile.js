@@ -1,11 +1,10 @@
 import React from 'react'
-import { makeStyles, Button, Paper, CardMedia, IconButton, Card } from '@material-ui/core';
+import { makeStyles, Button, Paper, IconButton, Card } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import RoomIcon from '@material-ui/icons/Room';
 import axios from 'axios';
-import { setAuthorizationHeader, editUserDetails, logoutAsync } from '../features/users/userSlice';
-import CreateIcon from '@material-ui/icons/Create';
+import { logoutAsync } from '../features/users/userSlice';
 import EditDetails from './EditDetails';
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import { useHistory } from 'react-router';
@@ -30,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 10,
     },
     profilePicture: {
-        // height: '70%',
-        // width: '70%',
         width: 200,
         height: 200,
         borderRadius: '50%',
@@ -95,20 +92,14 @@ const Profile = () => {
     const dispatch = useDispatch();
     const handleImageChange = (event) => {
         const image = event.target.files[0];
-        // send to server
         const formData = new FormData();
         formData.append('image', image, image.name)
         const FBIdToken = localStorage.FBIdToken;
         axios.defaults.headers.common['Authorization'] = FBIdToken;
         axios.post('/user/image', formData)
-            .then(res => console.log(res))
             .catch(err => console.log(err));
     };
-    // const getUserData = () => {
-    //     const FBIdToken = localStorage.FBIdToken;
-    //     axios.defaults.headers.common['Authorization'] = FBIdToken;
-    //     dispatch(editUserDetails(credentials));
-    // };
+   
     const logout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
             await dispatch(logoutAsync());
@@ -163,11 +154,6 @@ const Profile = () => {
                     >
                         <SubdirectoryArrowRightIcon className={classes.logoutIcon} />
                     </IconButton>
-                    {/* <Button
-                        onClick={getUserData}
-                        color='primary'
-                        variant='contained'
-                    >getUserData</Button> */}
 
                 </Paper>
             </>

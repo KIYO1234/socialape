@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { changeUserDetails, changeUserDetailsAsync } from '../features/users/userSlice';
+import { changeUserDetailsAsync } from '../features/users/userSlice';
 
 const useStyles = makeStyles((theme) => ({
     createIcon: {

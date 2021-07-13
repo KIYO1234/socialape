@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles, IconButton, Button, Grid } from '@material-ui/core'
+import React, { useState } from 'react'
+import { makeStyles, IconButton } from '@material-ui/core'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from "@material-ui/core/Typography";
 import { Link, useHistory } from 'react-router-dom';
 import dayjs from "dayjs";
-// Facebookとかでよくある（2 days ago）とかを作るやつ
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllComments, likeAsync, unlikeAsync, deleteScream } from '../features/screams/screamSlice';
+import { likeAsync, unlikeAsync, deleteScream } from '../features/screams/screamSlice';
 import CommentIcon from '@material-ui/icons/Comment';
 import { Comment } from './index';
-import AddCommentIcon from '@material-ui/icons/AddComment';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { SettingsBackupRestore } from '@material-ui/icons';
-import { isPropertyAccessExpression } from 'typescript';
 
 const useStyles = makeStyles((theme) => ({
     card: {
         display: "flex",
         marginBottom: 20,
-        // width: 450,
         height: 250,
         width: '75%',
         minWidth: 250,
-        // height: '60%',
         maxHeight: 200,
         position: 'relative',
         paddingLeft: '5%',
@@ -38,8 +32,6 @@ const useStyles = makeStyles((theme) => ({
     },
 
     image: {
-        // minWidth: 120,
-        // minHeight: 120,
         cursor: 'pointer',
         width: 120,
         height: 120,
@@ -78,7 +70,6 @@ const Scream = (props) => {
     const history = useHistory();
     const screams = useSelector(state => state.screams.screams);
     const credentials = useSelector(state => state.users.loginUser.credentials);
-    const handle = useSelector(state => state.users.loginUser.credentials.handle);
     const token = localStorage.FBIdToken;
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -120,27 +111,7 @@ const Scream = (props) => {
     };
     
     const [like, setLike] = useState(false);
-    // console.log('like', like);
-    
-    // const likes = useSelector(state => state.screams.likes);
-    // const likesByUser = likes.filter(like => like.userHandle === handle);
-    
-    
-
-    // useEffect(() => {
-    //     // alert('reload');
-    //     console.log('screams rendered');
-    //     if (likesByUser.length > 0) {
-    //         if (likesByUser.findIndex(like => like.screamId === props.scream.screamId) !== -1) {            
-    //             setLike(true);
-    //         } else {
-    //             setLike(false);
-    //         };
-    //     }
-    // }, []);
     dayjs.extend(utc);
-    const now = dayjs.utc().local().format();
-    // console.log('now: ', now);
     
     return (
         <div>

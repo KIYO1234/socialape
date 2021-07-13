@@ -3,11 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'; import { createTheme } from '@material-ui/core';
 import jwtDecode from 'jwt-decode';
 import AuthRoute from './util/AuthRoute';
-// Pages
 import { CommentDetails, Home, Login, Signup, User, EachScream } from './pages/index';
-// Components
 import { Navbar, ProfileSingle } from './components/index';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchAllCommentsAsync, fetchAllLikes, fetchScreamsAsync } from './features/screams/screamSlice';
 import { useEffect } from 'react';
 import { setUserAsync, logoutAsync } from './features/users/userSlice';
@@ -29,32 +27,15 @@ const theme = createTheme({
   },
 })
 
-
 function App() {
   const dispatch = useDispatch();
   let authenticated = false;
   const token = localStorage.FBIdToken;
-  // const screams = useSelector(state => state.screams.screams);
-  // const handle = useSelector(state => state.users.loginUser.credentials.handle);
-  // const likes = useSelector(state => state.screams.likes);
-  // const likesByUser = likes.filter(like => like.userHandle === handle);
-  // console.log('likesByUser: ', likesByUser);
-  // const screams = useSelector(state => state.screams.screams);
-  // console.log('screams', screams);
-  // let isLikedByUser = []
-  // for (let i = 0; i < screams.length; i++){
-  //     isLikedByUser.push(likesByUser.findIndex(like => like.screamId === screams[i].screamId) !== -1)
-  // }
-  // console.log('isLikedByUser', isLikedByUser);
-  
 
   if (token) {
     const decodedToken = jwtDecode(token)
     if (decodedToken.exp * 1000 < new Date()) {
       alert('Your account has been expired');
-      // home に redirect する
-      // こういう書き方もある
-      // window.location.href = '/login';
       authenticated = false;
       dispatch(logoutAsync());
       localStorage.removeItem('FBIdToken');
@@ -64,11 +45,9 @@ function App() {
   }
 
   useEffect(() => {
-    console.log('App.js rendered');
     dispatch(fetchScreamsAsync());
     dispatch(fetchAllCommentsAsync());
     dispatch(fetchAllLikes());
-    // axios.get('/screams')
   }, [dispatch]);
   useEffect(() => {
     if (token) {

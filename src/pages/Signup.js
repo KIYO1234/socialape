@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-// import AppIcon from '../images/monkey-icon.png';
 import AppIcon from '../images/roundChat.jpeg';
 import Typography from "@material-ui/core/Typography";
 import { useForm } from "react-hook-form";
@@ -14,7 +13,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     form: {
         textAlign: 'center',
     },
@@ -62,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     hover: {
         opacity: '40%'
     },
-}));
+});
 
 const Signup = () => {
     const classes = useStyles();
@@ -83,23 +82,18 @@ const Signup = () => {
     // password
     const handlePassword = (event) => {
         setPassword(event.target.value);
-        // console.log(password);
     };
     const handleType = () => {
         setVisible(!visible)
     }
-    // confirmPassword
     const handleConfirmType = () => {
         setConfirm(!confirm)
     }
 
-    // console.log(errors);
     const onSubmit = async (data) => {
-        // console.log(data);
         setLoading(true);
         await axios.post('/signup', data)
             .then(res => {
-                // console.log(res.data);
                 alert('You have signed up successfully!');
                 setLoading(false);
                 // tokenをlocalStorageに保存
@@ -112,8 +106,6 @@ const Signup = () => {
                 setLoading(false);
             });
     };
-    // localStorage.removeItem('Bearer');
-    console.log(localStorage);
 
     return (
         <div>

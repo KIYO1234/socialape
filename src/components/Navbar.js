@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Button, makeStyles, IconButton, Hidden } from "@material-ui/core";
-import { useSelector, useDispatch } from 'react-redux';
-import { logoutAsync } from '../features/users/userSlice';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Menu } from '@material-ui/icons';
 import SideDrawer from './SideDrawer';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { AddScream, Notifications } from './index';
 
 const useStyles = makeStyles((theme) => ({
@@ -53,19 +48,7 @@ const Navbar = () => {
     const history = useHistory();
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);
     const imageUrl = useSelector(state => state.users.loginUser.credentials.imageUrl);
-    console.log(imageUrl);
     
-    const dispatch = useDispatch();
-    const logout = async () => {
-        if (window.confirm('Are you sure you want to logout?')) {
-            await dispatch(logoutAsync());
-            alert('Good Bye !');
-            history.push('/');
-        } else {
-            alert('Canceled');
-            return false;
-        };
-    };
     const link = (path) => {
         history.push(path);
     };
@@ -83,26 +66,15 @@ const Navbar = () => {
                                     className={classes.userImage}
                                     onClick={() => link('/profile')}
                                 />
-                                {/* <IconButton className={classes.accountIcon}>
-                                    <AccountCircleIcon
-                                        onClick={() => link('/profile')}
-                                    />
-                                </IconButton> */}
                                 <div>
                                     <AddScream />
                                 </div>
-                                {/* <IconButton>
-                                    <AddIcon className={classes.addIcon} />
-                                </IconButton> */}
                                 <IconButton>
                                     <HomeIcon
                                         className={classes.homeIcon}
                                         onClick={() => link('/')}
                                     />
                                 </IconButton>
-                                {/* <IconButton>
-                                    <NotificationsIcon className={classes.notificationsIcon} />
-                                </IconButton> */}
                                 <Notifications />
                             </>
                             :

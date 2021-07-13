@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles, IconButton, Button, Grid } from '@material-ui/core'
+import { makeStyles, IconButton, Grid } from '@material-ui/core'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from "@material-ui/core/Typography";
 import { Link, useHistory, useParams } from 'react-router-dom';
 import dayjs from "dayjs";
-// Facebookとかでよくある（2 days ago）とかを作るやつ
 import relativeTime from "dayjs/plugin/relativeTime";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllComments, likeAsync, unlikeAsync, deleteScream, fetchRelatedScreams } from '../features/screams/screamSlice';
+import { likeAsync, unlikeAsync, deleteScream, fetchRelatedScreams } from '../features/screams/screamSlice';
 import CommentIcon from '@material-ui/icons/Comment';
 import { RelatedComment } from '../components/index';
-import AddCommentIcon from '@material-ui/icons/AddComment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios';
 import { Loading } from '../components/index';
@@ -89,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 50,
     },
     userHandle: {
-        // color: '#33c9dc',
         fontSize: 25,
         fontWeight: 'bold',
         marginBottom: 15,
@@ -106,7 +103,6 @@ const useStyles = makeStyles((theme) => ({
 
 const EachScream = () => {
     const history = useHistory();
-    // const screams = useSelector(state => state.screams.screams);
     const credentials = useSelector(state => state.users.loginUser.credentials);
     const token = localStorage.FBIdToken;
     const dispatch = useDispatch();
@@ -116,7 +112,6 @@ const EachScream = () => {
     const { screamId } = useParams();
     console.log(screamId);
     const [userData, setUserData] = useState();
-    // const comments = useSelector(state => state.screams.comments);
     const relatedComments = useSelector(state => state.screams.relatedComments);
     const screams = useSelector(state => state.screams.screams);
     
@@ -124,38 +119,17 @@ const EachScream = () => {
     const relatedScream = (chosenScream[0]);
     console.log('relatedScream', relatedScream);
     
-    // const [isLikedByUser, setIsLikedByUser] = useState(false);    
     
-    // let relatedScreams;
     useEffect(() => {
-        if (screamId) {
-            console.log('screamId', screamId)
-            
+        if (screamId) {            
             dispatch(fetchRelatedScreams(screamId))
         } else {
             return
         }
     }, [dispatch, screamId])
-    // console.log('relatedScreams: ', relatedScreams)
 
     const { handle } = useParams();
-    console.log('handle', handle);
-    const likes = useSelector(state => state.screams.likes);
-    console.log('likes', likes)
-    const likesByUser = likes.filter(like => like.userHandle === handle);
-    console.log('likesByUser', likesByUser);
-    
-    const likeByUser = likesByUser.findIndex(like => like.screamId === screamId);
-    console.log('likeByUser', likeByUser);
-    
-    // useEffect(() => {
-    //     if (likeByUser === -1) {
-    //         setLike(false);
-    //     } else {
-    //         setLike(true);
-    //     }
-    // }, [likeByUser])
-    
+        
     dayjs.extend(relativeTime);
     useEffect(() => {
         axios.get(`/user/${handle}`)
@@ -184,20 +158,7 @@ const EachScream = () => {
             alert('Canceled');
         }
     };
-    // const handleLike = () => {
-    //     if (token) {
-    //         if (like) {
-    //             console.log('unlike');
-    //             dispatch(unlikeAsync(scream));
-    //         } else {
-    //             console.log('like');
-    //             dispatch(likeAsync(scream));
-    //         }
-    //         setLike(!like);
-    //     } else {
-    //         alert('You are not logged in. \n Please login.')
-    //     };
-    // };
+    
     const handleLike = () => {
         if (token) {
             dispatch(likeAsync(scream));
@@ -277,7 +238,6 @@ const EachScream = () => {
                                 </IconButton>
                             }
                             {relatedScream && relatedScream.likeCount}
-                            {/* {scream.likeCount} */}
     
                             {scream.userHandle === credentials.handle &&
                                 <IconButton
@@ -302,7 +262,6 @@ const EachScream = () => {
                             </Grid>
                             <Grid item xs={12} sm={5} className={classes.commentBody}>
                                 <div className={classes.userHandle}>{comment.userHandle}</div>
-                                {/* <div>Replying to {comment.}</div> */}
                                 <div key={index}>{comment.body}</div>
                             </Grid>
                             <Grid item xs={12} sm={3}>

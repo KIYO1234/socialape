@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, IconButton, Divider, Hidden, Grid } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';

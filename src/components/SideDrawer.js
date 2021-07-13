@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu } from '@material-ui/icons';
-import { IconButton, Drawer, Button, List, Divider, ListItem, ListItemIcon, ListItemText, Hidden } from '@material-ui/core';
+import { IconButton, Drawer, List, Divider, ListItem, ListItemText, Hidden } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import { useHistory } from 'react-router';
-import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
-import AddIcon from '@material-ui/icons/Add';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AddScream } from './index';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAsync } from '../features/users/userSlice';
@@ -33,14 +29,11 @@ const useStyles = makeStyles((theme) => ({
         right: 20,
     },
     userImage: {
-        // maxWidth: 50,
         width: 50,
         height: 50,
         borderRadius: '50%',
         objectFit: 'cover',
         display: 'block',
-        // position: 'fixed',
-        // left: '44%',
         cursor: 'pointer',
     },
 }));

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { makeStyles, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@material-ui/core';
-import CommentIcon from '@material-ui/icons/Comment';
 import { useDispatch, useSelector } from 'react-redux';
 import { commentAsync } from '../features/screams/screamSlice';
 import AddCommentIcon from '@material-ui/icons/AddComment';
@@ -38,15 +37,17 @@ const Comment = (props) => {
     const userHandle = useSelector(state => state.users.loginUser.credentials.handle);
     const dispatch = useDispatch();
     const classes = useStyles();
+
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const [comment, setComment] = useState('');
     const handleClose = () => {
         setOpen(false);
         setComment('');
     };
+    
+    const [comment, setComment] = useState('');
     const handleComment = (event) => {
         setComment(event.target.value);
     };

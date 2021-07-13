@@ -2,11 +2,9 @@ import React from 'react';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, IconButton } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -19,7 +17,6 @@ import { markNotificationsRead } from '../features/users/userSlice';
 dayjs.extend(require('dayjs/plugin/timezone'))
 dayjs.extend(require('dayjs/plugin/utc'))
 dayjs.tz.setDefault('Asia/Tokyo');
-console.log('time', dayjs.tz().format());
 
 const useStyles = makeStyles({
     menu: {
@@ -44,14 +41,12 @@ const useStyles = makeStyles({
 const Notifications = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const notifications = useSelector(state => state.users.loginUser.notifications);
-    console.log('notifications: ', notifications);
-    const unReads = notifications.filter(notification => notification.read === false);
-    // console.log('unReads: ', unReads);
-    const unReadsNotificationIds = unReads.map(unread => unread.notificationId);
-    // console.log('unReadsNotificationId', unReadsNotificationIds);
-    
     const classes = useStyles();
+
+    const notifications = useSelector(state => state.users.loginUser.notifications);
+    const unReads = notifications.filter(notification => notification.read === false);
+    const unReadsNotificationIds = unReads.map(unread => unread.notificationId);
+    
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleClick = (event) => {        
         setAnchorEl(event.currentTarget);
@@ -65,12 +60,11 @@ const Notifications = () => {
 
     dayjs.extend(relativeTime);
 
-    const link = (path, screamId) => {
+    const link = (path) => {
         history.push(path);
         handleClose();
     }
     const ITEM_HEIGHT = 48;
-
 
     return (
         <div className={classes.notificationsContainer}>

@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react'
-import { makeStyles, Button, Paper, CardMedia, IconButton, Grid } from '@material-ui/core';
+import React from 'react'
+import { makeStyles, Paper, IconButton, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import RoomIcon from '@material-ui/icons/Room';
-import axios from 'axios';
 import {
-    setAuthorizationHeader,
-    editUserDetails,
     logoutAsync,
     updateImageAsync,
 } from '../features/users/userSlice';
-import CreateIcon from '@material-ui/icons/Create';
 import EditDetails from './EditDetails';
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import { useHistory } from 'react-router';
-import firebase from 'firebase'
 import Loading from './Loading';
 
 const useStyles = makeStyles((theme) => ({
@@ -99,52 +94,13 @@ const ProfileSingle = () => {
     const handle = useSelector(state => state.users.loginUser.credentials.handle);
     const isLoggedIn = useSelector(state => state.users.isLoggedIn);
     const isLoading = useSelector(state => state.users.isLoading);
-    console.log(isLoading);
-    
-    useEffect(() => {
-        console.log('profile single rendered', credentials.imageUrl);
-        console.log('profile single rendered', credentials);
-    }, []);
 
     const dispatch = useDispatch();
     const handleImageChange = async(event) => {
         const file = event.target.files[0];
-        // console.log(file);
-        // console.log(file.name);
         await dispatch(updateImageAsync({ file: file, handle: handle }));
-        // alert('Your image has been updated successfully !');
-        // history.push('/');
-
-        // send to server
-        // const formData = new FormData();
-        // formData.append('file', file, file.name)
-
-        // // Send to server(一旦なし)
-        // const FBIdToken = localStorage.FBIdToken;
-        // axios.defaults.headers.common['Authorization'] = FBIdToken;
-        // axios.post('/user/image', file.name)
-        //     .then(res => console.log(res))
-        //     .catch(err => console.log(err));
-
-        // // 直接Firebaseへアップロード
-        // const storageRef = firebase.storage().ref(file.name);
-        // console.log(storageRef);
-
-        // // firebase.storage().ref(file.name).put(file)
-        // storageRef.put(file)
-        //     .then(res => {
-        //         console.log('upload image successfully', res);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
     };
 
-    const getUserData = () => {
-        const FBIdToken = localStorage.FBIdToken;
-        axios.defaults.headers.common['Authorization'] = FBIdToken;
-        dispatch(editUserDetails(credentials));
-    };
     const logout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
             await dispatch(logoutAsync());
@@ -158,7 +114,6 @@ const ProfileSingle = () => {
 
 
     if (!isLoading) {
-        
         if (isLoggedIn) {
             return (
                 <div className={classes.parentContainer}>

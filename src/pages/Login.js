@@ -1,22 +1,16 @@
 import React, { useState, useCallback } from 'react'
 import TextField from "@material-ui/core/TextField";
-import { makeStyles, IconButton } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import AppIcon from '../images/roundChat.jpeg'
 import Typography from "@material-ui/core/Typography";
-import { useForm } from "react-hook-form";
 import Button from "@material-ui/core/Button";
-import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
-import { CircularProgress } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { fetchLoginUserAsync, login } from '../features/users/userSlice';
+import { fetchLoginUserAsync } from '../features/users/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loading } from '../components';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { convertCompilerOptionsFromJson } from 'typescript';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -75,11 +69,9 @@ const Login = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
-    const { register, handleSubmit, formState: { errors }, reset,} = useForm();
     const isLoading = useSelector(state => state.users.isLoading);
     const isLoggedIn = useSelector(state => state.users.isLoggedIn)
     const error = useSelector(state => state.users.error);
-    // useState
     const [visible, setVisible] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -90,59 +82,18 @@ const Login = () => {
         setPassword(event.target.value);
     }, [setPassword]);
 
-    // handlers
     const handleType = () => {
         setVisible(!visible)
     };
-    const clear = () => {
-        setEmail('');
-    };
 
-    // functions
     const onSubmit = async () => {
-        // let error = ''
-        // await dispatch(fetchLoginUserAsync(data))
-        //     .then(res => console.log('login res: ', res))
-        //     .catch(err => {
-        //         console.log('login err: ', err);
-        //         error = err;
-        //         console.log('error', error);
-        //         if (error) {
-        //             alert('error occurred')
-        //         } else {
-        //             history.push('/');
-        //         }
-        //     });
-
-        // ---------------------------------
-        // try catch
-        // try {
-        //     await dispatch(fetchLoginUserAsync(data))
-        //         .then(res => console.log('login res: ', res))
-        //     // history.push('/');
-        // } catch (err) {
-        //     let error;
-        //     console.log('login err: ', err);
-        //     error = err;
-        //     console.log('error', error);
-        //     return
-        //     // if (error) {
-        //     //     alert('error occurred')
-        //     // } else {
-        //     //     history.push('/');
-        //     // }
-        //     // };
-        // }
-        // --------------------------------
-    
-        dispatch(fetchLoginUserAsync({ email: email, password: password })).then(res => {
-            console.log(res)
-        })
+        dispatch(fetchLoginUserAsync({ email: email, password: password }))
     }
 
-    if (!error && isLoggedIn) {
+    console.log('isLoggedIn: ', isLoggedIn);
+    if (isLoggedIn) {
         history.push('/')
-    }    
+    }
 
     if (!isLoading) {
         return (
@@ -156,8 +107,6 @@ const Login = () => {
                             className={classes.pageTitle}
                         >Login
                         </Typography>
-    
-                        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
 
                         <div className={classes.textFieldContainer}>
                             <TextField
@@ -167,21 +116,7 @@ const Login = () => {
                                 value={email}
                                     type='search'
                                     fullWidth
-                                // {...register('email', {
-                                //     required: 'Email must not empty',
-                                //     pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                                // })}
                             ></TextField>
-                            {/* {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
-                            <p className={classes.errMessage}>
-                                {errors.email?.type === "pattern" && "Your Email address is invalid type"}
-                            </p> */}
-                            {/* <IconButton
-                                className={classes.clearIcon}
-                                onClick={clear}
-                            >
-                                <HighlightOffIcon />
-                            </IconButton> */}
                         </div>
                     
                         {/* password */}
@@ -193,9 +128,6 @@ const Login = () => {
                                 onChange={handlePassword}
                                     value={password}
                                     fullWidth
-                                // {...register("password", {
-                                //     required: "Password must not be empty",
-                                // })}
                             ></TextField>
                             <span
                                 className={classes.visibilityIcon}
