@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, IconButton } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import AppIcon from '../images/monkey-icon.png'
+import AppIcon from '../images/roundChat.jpeg'
 import Typography from "@material-ui/core/Typography";
 import { useForm } from "react-hook-form";
 import Button from "@material-ui/core/Button";
@@ -12,7 +12,12 @@ import { CircularProgress } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { fetchLoginUserAsync, login } from '../features/users/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Loading } from '../components';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { convertCompilerOptionsFromJson } from 'typescript';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -20,8 +25,9 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         margin: '20px auto 20px auto',
-        width: 70,
+        width: 60,
         height: 60,
+        borderRadius: '50%',
     },
     errMessage: {
         color: "red",
@@ -41,75 +47,155 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
     },
     passwordArea: {
-        position: 'relative'
+        position: 'relative',
     },
     visibilityIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
+    textFieldContainer: {
+        position: 'relative',
+    },
+    clearIcon: {
+        position: 'absolute',
+        right: -12,
+        top: 5,
+    },
+    field: {
+        width: '80%'
+    },
+    mainGrid: {
+        width: '100%',
+    }
 }));
 
 const Login = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm();
-
+    const { register, handleSubmit, formState: { errors }, reset,} = useForm();
+    const isLoading = useSelector(state => state.users.isLoading);
+    const isLoggedIn = useSelector(state => state.users.isLoggedIn)
+    const error = useSelector(state => state.users.error);
     // useState
-    const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleEmail = useCallback((event) => {
+        setEmail(event.target.value);
+    }, [setEmail]);
+    const handlePassword = useCallback((event) => {
+        setPassword(event.target.value);
+    }, [setPassword]);
 
     // handlers
     const handleType = () => {
         setVisible(!visible)
-    }
+    };
+    const clear = () => {
+        setEmail('');
+    };
 
     // functions
-    const onSubmit = async (data) => {
-        dispatch(fetchLoginUserAsync(data));
-        history.push('/');
+    const onSubmit = async () => {
+        // let error = ''
+        // await dispatch(fetchLoginUserAsync(data))
+        //     .then(res => console.log('login res: ', res))
+        //     .catch(err => {
+        //         console.log('login err: ', err);
+        //         error = err;
+        //         console.log('error', error);
+        //         if (error) {
+        //             alert('error occurred')
+        //         } else {
+        //             history.push('/');
+        //         }
+        //     });
+
+        // ---------------------------------
+        // try catch
+        // try {
+        //     await dispatch(fetchLoginUserAsync(data))
+        //         .then(res => console.log('login res: ', res))
+        //     // history.push('/');
+        // } catch (err) {
+        //     let error;
+        //     console.log('login err: ', err);
+        //     error = err;
+        //     console.log('error', error);
+        //     return
+        //     // if (error) {
+        //     //     alert('error occurred')
+        //     // } else {
+        //     //     history.push('/');
+        //     // }
+        //     // };
+        // }
+        // --------------------------------
+    
+        dispatch(fetchLoginUserAsync({ email: email, password: password })).then(res => {
+            console.log(res)
+        })
     }
 
-    return (
-        <div>
-            <Grid container className={classes.form}>
-                <Grid item sm />
-                <Grid item sm>
-                    <img className={classes.image} src={AppIcon} alt="monkey" />
-                    <Typography
-                        variant="h5"
-                        className={classes.pageTitle}
-                    >Login
-                    </Typography>
+    if (!error && isLoggedIn) {
+        history.push('/')
+    }    
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <TextField
-                            label="Email"
-                            {...register('email', {
-                                required: 'Email must not empty',
-                                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                            })}
-                        ></TextField>
-                        {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
-                        <p className={classes.errMessage}>
-                            {errors.email?.type === "pattern" && "Your Email address is invalid type"}
-                        </p>
+    if (!isLoading) {
+        return (
+            <div>
+                <Grid container className={classes.form}>
+                    <Grid item md sm={3} xs={2}/>
+                    <Grid item md sm={6} xs={8} className={classes.mainGrid}>
+                        <img className={classes.image} src={AppIcon} alt="monkey" />
+                        <Typography
+                            variant="h5"
+                            className={classes.pageTitle}
+                        >Login
+                        </Typography>
+    
+                        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
 
+                        <div className={classes.textFieldContainer}>
+                            <TextField
+                                label="Email"
+                                autoComplete='email'
+                                onChange={handleEmail}
+                                value={email}
+                                    type='search'
+                                    fullWidth
+                                // {...register('email', {
+                                //     required: 'Email must not empty',
+                                //     pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                                // })}
+                            ></TextField>
+                            {/* {errors.email && <p className={classes.errMessage}>{errors.email.message}</p>}
+                            <p className={classes.errMessage}>
+                                {errors.email?.type === "pattern" && "Your Email address is invalid type"}
+                            </p> */}
+                            {/* <IconButton
+                                className={classes.clearIcon}
+                                onClick={clear}
+                            >
+                                <HighlightOffIcon />
+                            </IconButton> */}
+                        </div>
+                    
                         {/* password */}
                         <div className={classes.passwordArea}>
                             <TextField
                                 label="Password"
-                                {...register("password", {
-                                    required: "Password must not be empty",
-                                })}
+                                autoComplete='current-password'
                                 type={visible ? 'text' : 'password'}
+                                onChange={handlePassword}
+                                    value={password}
+                                    fullWidth
+                                // {...register("password", {
+                                //     required: "Password must not be empty",
+                                // })}
                             ></TextField>
                             <span
                                 className={classes.visibilityIcon}
@@ -120,27 +206,24 @@ const Login = () => {
                                     <VisibilityIcon />
                                 }
                             </span>
-                            <p className={classes.errMessage}>
-                                {errors.password && errors.password.message}
-                            </p>
+                            {error &&
+                                <p className={classes.errMessage}>
+                                    {error}
+                                </p>
+                            }
                         </div>
 
                         {/* loginButton */}
                         <div>
                             <Button
-                                type="submit"
                                 variant="contained"
                                 color="primary"
-                                className={classes.loginBtn}
-                                disabled={loading}
+                            className={classes.loginBtn}
+                            onClick={onSubmit}
                             >
                                 Login
-                                {loading &&
-                                    <CircularProgress className={classes.progress} />
-                                }
                             </Button>
                         </div>
-
                         {/* message */}
                         <div className={classes.toSignupMsg}>
                             <small>
@@ -150,14 +233,15 @@ const Login = () => {
                                 </div>
                             </small>
                         </div>
-
-                    </form>
-
+                        {/* </form> */}
+                    </Grid>
+                    <Grid item md sm={3} xs={2} />
                 </Grid>
-                <Grid item sm />
-            </Grid>
-        </div>
-    );
+            </div>
+        ); 
+    } else {
+        return <Loading text='Logging in...' />
+    }
 }
 
 

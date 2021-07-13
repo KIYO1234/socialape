@@ -4,3 +4,7 @@ export { default as Profile } from './Profile';
 export { default as ProfileSingle } from './ProfileSingle';
 export { default as SideDrawer } from './SideDrawer';
 export { default as EditDetails } from './EditDetails';
+export { default as Comment } from './Comment';
+export { default as RelatedComment } from './RelatedComment';
+export { default as AddScream } from './AddScream';
+export { default as Notifications } from './Notifications';

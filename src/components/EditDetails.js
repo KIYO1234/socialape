@@ -9,6 +9,10 @@ const useStyles = makeStyles((theme) => ({
     createIcon: {
         color: '#33c9dc',
     },
+    // editDetailContainer: {
+    //     position: 'relative',
+    //     left: 200,
+    // }
 }));
 
 const EditDetails = () => {
@@ -55,7 +59,10 @@ const EditDetails = () => {
     if (credentials) {
         return (
             <>
-                <IconButton onClick={handleClickOpen}>
+                <IconButton
+                    onClick={handleClickOpen}
+                    // className={classes.editDetailContainer}
+                >
                     <CreateIcon className={classes.createIcon} />
                 </IconButton>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -73,6 +80,7 @@ const EditDetails = () => {
                             fullWidth
                             defaultValue={credentials.bio}
                             onChange={handleBio}
+                            multiline
                         />
                         <TextField
                             autoFocus
@@ -89,9 +97,21 @@ const EditDetails = () => {
                         <Button onClick={handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={change} color="primary">
-                            Change
-                        </Button>
+                        {bio && bio.length <= 140 ?
+                            <Button
+                                onClick={change} color="primary"
+                                disabled={false}
+                            >
+                                Change
+                            </Button>
+                            :
+                            <Button
+                                onClick={change} color="primary"
+                                disabled={true}
+                            >
+                                Change
+                            </Button>
+                        }
                     </DialogActions>
                 </Dialog>
             </>

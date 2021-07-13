@@ -13,11 +13,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Loading = () => {
+const Loading = (props) => {
     const classes = useStyles()
     return (
         <div className={classes.loading}>
-            <div className={classes.loadingMsg}>Loading...</div>
+            <div className={classes.loadingMsg}>{props.text}</div>
             <CircularProgress></CircularProgress>
         </div>
     )

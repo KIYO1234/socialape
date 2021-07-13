@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import AppIcon from '../images/monkey-icon.png'
+// import AppIcon from '../images/monkey-icon.png';
+import AppIcon from '../images/roundChat.jpeg';
 import Typography from "@material-ui/core/Typography";
 import { useForm } from "react-hook-form";
 import Button from "@material-ui/core/Button";
@@ -19,8 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         margin: '20px auto 20px auto',
-        width: 70,
+        width: 60,
         height: 60,
+        borderRadius: '50%',
     },
     errMessage: {
         color: "red",
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     visibilityIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
     confirmPasswordArea: {
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     visibilityOffIcon: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        top: 20,
         cursor: 'pointer',
     },
     hover: {
@@ -81,7 +83,7 @@ const Signup = () => {
     // password
     const handlePassword = (event) => {
         setPassword(event.target.value);
-        console.log(password);
+        // console.log(password);
     };
     const handleType = () => {
         setVisible(!visible)
@@ -93,11 +95,11 @@ const Signup = () => {
 
     // console.log(errors);
     const onSubmit = async (data) => {
-        console.log(data);
+        // console.log(data);
         setLoading(true);
         await axios.post('/signup', data)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 alert('You have signed up successfully!');
                 setLoading(false);
                 // tokenをlocalStorageに保存
@@ -105,7 +107,8 @@ const Signup = () => {
                 history.push('/');
             })
             .catch(err => {
-                alert('Something went wrong... \n Try again !')
+                alert('Something went wrong... \n Try again !');
+                console.log(err);
                 setLoading(false);
             });
     };
@@ -115,8 +118,8 @@ const Signup = () => {
     return (
         <div>
             <Grid container className={classes.form}>
-                <Grid item sm />
-                <Grid item sm>
+                <Grid item md sm={3} xs={2} />
+                <Grid item md sm={6} xs={8}>
                     <img className={classes.image} src={AppIcon} alt="monkey" />
                     <Typography
                         variant="h5"
@@ -132,6 +135,7 @@ const Signup = () => {
                                 pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
                             })}
                             fullWidth
+                            type='search'
                         ></TextField>
                         {errors.email &&
                             <p className={classes.errMessage}>{errors.email.message}
@@ -168,7 +172,7 @@ const Signup = () => {
                         {/* confirmPassword */}
                         <div className={classes.confirmPasswordArea}>
                             <TextField
-                                label="Confirm Password"
+                                label="Confirm"
                                 {...register("confirmPassword", {
                                     required: "Password must not be empty",
                                     validate: (value => value === password)
@@ -202,6 +206,7 @@ const Signup = () => {
                                 required: "Handle must not be empty",
                             })}
                             fullWidth
+                            type='search'
                         ></TextField>
                         {errors.handle && <p className={classes.errMessage}>{errors.handle.message}</p>}
 
@@ -233,7 +238,7 @@ const Signup = () => {
                     </form>
 
                 </Grid>
-                <Grid item sm />
+                <Grid item md sm={3} xs={2} />
             </Grid>
         </div>
     );
